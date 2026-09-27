@@ -6,6 +6,19 @@
 
 [English version](README.md)
 
+![Обзор](docs/overview.png)
+
+<table>
+<tr>
+<td><img src="docs/interfaces.png" alt="Интерфейсы"></td>
+<td><img src="docs/wireless.png" alt="Беспроводная сеть"></td>
+</tr>
+<tr>
+<td><img src="docs/firewall.png" alt="Межсетевой экран: переключатели и селекты"></td>
+<td><img src="docs/mobile.png" alt="Телефон"></td>
+</tr>
+</table>
+
 ## Возможности
 
 - **Боковое меню** с линейными иконками: текущий раздел раскрыт, остальные открываются выпадающими меню. На телефоне меню сворачивается в верхнюю панель с лентой «таблеток».

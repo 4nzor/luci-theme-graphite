@@ -6,6 +6,19 @@ ring gauges on the status page and iOS-style switches.
 
 [Русская версия](README_ru.md)
 
+![Status overview](docs/overview.png)
+
+<table>
+<tr>
+<td><img src="docs/interfaces.png" alt="Interfaces"></td>
+<td><img src="docs/wireless.png" alt="Wireless"></td>
+</tr>
+<tr>
+<td><img src="docs/firewall.png" alt="Firewall settings: switches and selects"></td>
+<td><img src="docs/mobile.png" alt="Phone layout"></td>
+</tr>
+</table>
+
 ## Features
 
 - **Sidebar navigation** with line icons; the current section stays expanded, the others open as flyouts. On phones it collapses into a top bar with a scrollable row of chips.
