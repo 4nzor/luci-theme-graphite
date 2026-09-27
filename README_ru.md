@@ -6,16 +6,16 @@
 
 [English version](README.md)
 
-![Обзор](docs/overview.png)
+![Обзор](docs/ru/overview.png)
 
 <table>
 <tr>
-<td><img src="docs/interfaces.png" alt="Интерфейсы"></td>
-<td><img src="docs/wireless.png" alt="Беспроводная сеть"></td>
+<td><img src="docs/ru/interfaces.png" alt="Интерфейсы"></td>
+<td><img src="docs/ru/wireless.png" alt="Беспроводная сеть"></td>
 </tr>
 <tr>
-<td><img src="docs/firewall.png" alt="Межсетевой экран: переключатели и селекты"></td>
-<td><img src="docs/mobile.png" alt="Телефон"></td>
+<td><img src="docs/ru/firewall.png" alt="Межсетевой экран: переключатели и селекты"></td>
+<td><img src="docs/ru/mobile.png" alt="Телефон"></td>
 </tr>
 </table>
 
