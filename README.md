@@ -4,7 +4,7 @@ A dark control-panel theme for OpenWrt LuCI. Graphite keeps LuCI's Bootstrap
 markup and turns it into a modern admin panel: sidebar navigation, card layout,
 ring gauges on the status page and iOS-style switches.
 
-[Русская версия](README_ru.md)
+[RU](README_ru.md) | **EN**
 
 ![Status overview](docs/overview.png)
 
