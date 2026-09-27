@@ -1,0 +1,8 @@
+#!/bin/sh
+# Register the theme and make it the active one on first install.
+uci -q batch <<-EOT
+	set luci.themes.Graphite=/luci-static/graphite
+	set luci.main.mediaurlbase=/luci-static/graphite
+	commit luci
+EOT
+exit 0

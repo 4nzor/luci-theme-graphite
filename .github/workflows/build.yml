@@ -1,0 +1,94 @@
+name: Build packages
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build .${{ matrix.format }} (OpenWrt ${{ matrix.openwrt }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - format: ipk
+            openwrt: "24.10.8"
+            sdk: https://downloads.openwrt.org/releases/24.10.8/targets/x86/64/openwrt-sdk-24.10.8-x86-64_gcc-13.3.0_musl.Linux-x86_64.tar.zst
+          - format: apk
+            openwrt: "25.12.5"
+            sdk: https://downloads.openwrt.org/releases/25.12.5/targets/x86/64/openwrt-sdk-25.12.5-x86-64_gcc-14.3.0_musl.Linux-x86_64.tar.zst
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve version
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "PKG_VER=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_ENV"
+          else
+            echo "PKG_VER=$(cat VERSION)" >> "$GITHUB_ENV"
+          fi
+
+      - name: Fetch OpenWrt SDK
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq zstd rsync
+          cd "$RUNNER_TEMP"
+          curl -fsSL "${{ matrix.sdk }}" -o sdk.tar.zst
+          tar --zstd -xf sdk.tar.zst
+          echo "SDK_DIR=$(find "$RUNNER_TEMP" -maxdepth 1 -type d -name 'openwrt-sdk*' | head -n1)" >> "$GITHUB_ENV"
+
+      - name: Build
+        working-directory: ${{ env.SDK_DIR }}
+        run: |
+          mkdir -p package/luci-theme-graphite
+          rsync -a --exclude .git --exclude .github --exclude docs "$GITHUB_WORKSPACE/" package/luci-theme-graphite/
+          ./scripts/feeds update base luci
+          ./scripts/feeds install luci-base luci-theme-bootstrap
+          echo "CONFIG_PACKAGE_luci-theme-graphite=m" >> .config
+          make defconfig
+          make package/luci-theme-graphite/compile V=s GRAPHITE_VERSION="$PKG_VER" GRAPHITE_RELEASE=1
+          mkdir -p "$GITHUB_WORKSPACE/dist"
+          find bin/packages -type f \( -name 'luci-theme-graphite*.apk' -o -name 'luci-theme-graphite*.ipk' \) -exec cp {} "$GITHUB_WORKSPACE/dist/" \;
+          ls -la "$GITHUB_WORKSPACE/dist"
+          test -n "$(ls "$GITHUB_WORKSPACE/dist")"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: luci-theme-graphite-${{ matrix.format }}
+          path: dist/*
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: luci-theme-graphite-*
+          path: dist
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          body: |
+            ## Graphite ${{ github.ref_name }}
+
+            Install over root SSH (picks `.apk` on OpenWrt 25.x, `.ipk` on 24.x):
+
+            ```sh
+            wget -qO- https://raw.githubusercontent.com/4nzor/luci-theme-graphite/main/install.sh | sh
+            ```
+
+            Remove:
+
+            ```sh
+            wget -qO- https://raw.githubusercontent.com/4nzor/luci-theme-graphite/main/uninstall.sh | sh
+            ```

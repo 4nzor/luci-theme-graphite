@@ -1,0 +1,14 @@
+luci-theme-graphite
+Copyright 2026 4nzor
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This theme is layered on top of the LuCI Bootstrap theme and reuses its
+stylesheets at runtime. The templates in ucode/template/themes/graphite/ are
+derived from the Bootstrap theme templates:
+  Copyright 2008 Steven Barth, 2012 David Menting, 2008-2022 Jo-Philipp Wich
+  and LuCI contributors - Apache License 2.0 - https://github.com/openwrt/luci
+
+Bundled fonts (htdocs/luci-static/graphite/fonts/), SIL Open Font License 1.1:
+  Onest - Copyright 2021 The Onest Project Authors (OFL-Onest.txt)
+  JetBrains Mono - Copyright 2020 The JetBrains Mono Project Authors (OFL-JetBrainsMono.txt)
