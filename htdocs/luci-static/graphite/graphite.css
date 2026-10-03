@@ -1,4 +1,4 @@
-/* luci-theme-graphite 1.0.0 | Apache-2.0 | built from stylus/graphite.user.css */
+/* luci-theme-graphite 1.1.0 | Apache-2.0 | built from stylus/graphite.user.css */
 /* JetBrains Mono cyrillic */
 @font-face {
   font-family: 'JetBrains Mono';
@@ -216,7 +216,7 @@ body.lang_uk header .brand::after { content: "онлайн"; }
 #topmenu.nav > li > a {
   display: flex !important;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
   padding: 12px 14px !important;
   border-radius: var(--r-m);
@@ -228,7 +228,7 @@ body.lang_uk header .brand::after { content: "онлайн"; }
   line-height: 1.2;
   transition: background .15s, color .15s;
 }
-#topmenu.nav > li > a::after {
+#topmenu.nav > li > a::before {
   content: "";
   flex: none;
   width: 20px;
@@ -241,8 +241,9 @@ body.lang_uk header .brand::after { content: "онлайн"; }
   margin: 0 !important;
   position: static !important;
 }
+#topmenu.nav > li > a::after { display: none !important; content: none !important; }
 #topmenu.nav > li:hover > a { background: var(--card) !important; color: var(--ink) !important; }
-#topmenu.nav > li:hover > a::after { opacity: .95; }
+#topmenu.nav > li:hover > a::before { opacity: .95; }
 
 /* icons (lucide-style, 1.75 stroke) */
 header {
@@ -271,12 +272,12 @@ body[data-page^="admin-statistics"] #topmenu > li:has(a[href*="/admin/statistics
   color: var(--ink) !important;
   box-shadow: none !important;
 }
-body[data-page^="admin-status"]     #topmenu > li:has(a[href*="/admin/status/"]) > a::after,
-body[data-page^="admin-system"]     #topmenu > li:has(a[href*="/admin/system/"]) > a::after,
-body[data-page^="admin-services"]   #topmenu > li:has(a[href*="/admin/services/"]) > a::after,
-body[data-page^="admin-network"]    #topmenu > li:has(a[href*="/admin/network/"]) > a::after,
-body[data-page^="admin-vpn"]        #topmenu > li:has(a[href*="/admin/vpn/"]) > a::after,
-body[data-page^="admin-statistics"] #topmenu > li:has(a[href*="/admin/statistics/"]) > a::after {
+body[data-page^="admin-status"]     #topmenu > li:has(a[href*="/admin/status/"]) > a::before,
+body[data-page^="admin-system"]     #topmenu > li:has(a[href*="/admin/system/"]) > a::before,
+body[data-page^="admin-services"]   #topmenu > li:has(a[href*="/admin/services/"]) > a::before,
+body[data-page^="admin-network"]    #topmenu > li:has(a[href*="/admin/network/"]) > a::before,
+body[data-page^="admin-vpn"]        #topmenu > li:has(a[href*="/admin/vpn/"]) > a::before,
+body[data-page^="admin-statistics"] #topmenu > li:has(a[href*="/admin/statistics/"]) > a::before {
   background: currentColor;
   opacity: 1;
 }
@@ -899,8 +900,62 @@ input[type="checkbox"]:focus-visible, input[type="radio"]:focus-visible {
 #modal_overlay .modal .cbi-section,
 #modal_overlay .modal .cbi-section-node { background: transparent !important; padding: 0 !important; margin-bottom: 8px !important; }
 #modal_overlay .modal .cbi-value { border: 0; }
-#modal_overlay .modal.login .cbi-value-title { flex-basis: 110px; }
 #modal_overlay .modal .button-row { gap: 8px; }
+
+/* login: one quiet card on the canvas, stacked fields, full-width primary */
+#modal_overlay > .modal.login {
+  width: min(400px, calc(100vw - 32px));
+  padding: 28px 28px 24px !important;
+  border-radius: 22px !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .04), transparent 80px),
+    var(--panel) !important;
+}
+#modal_overlay > .modal.login > h4 {
+  margin: 0 0 20px !important;
+  font-size: clamp(28px, 5vw, 34px);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  text-transform: lowercase;
+  color: var(--title, var(--ink));
+}
+#modal_overlay .modal.login .cbi-value {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  padding: 10px 0 !important;
+  border: 0;
+}
+#modal_overlay .modal.login .cbi-value-title {
+  flex: none;
+  flex-basis: auto;
+  width: auto !important;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-3) !important;
+}
+#modal_overlay .modal.login .cbi-value-field { width: 100%; }
+#modal_overlay .modal.login input[type="text"],
+#modal_overlay .modal.login input[type="password"] {
+  width: 100% !important;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+#modal_overlay .modal.login .alert-message { margin: 12px 0 4px !important; }
+#modal_overlay .modal.login .button-row,
+#modal_overlay .modal.login > .cbi-button,
+#modal_overlay .modal.login > button {
+  width: 100%;
+  margin-top: 12px;
+}
+#modal_overlay .modal.login .cbi-button-positive,
+#modal_overlay .modal.login button.important {
+  width: 100% !important;
+  min-height: 44px;
+  justify-content: center;
+}
 
 /* tooltips */
 .cbi-tooltip {
@@ -1541,12 +1596,12 @@ select[multiple] { background: var(--field) !important; border: 1px solid var(--
   }
   #topmenu.nav > li { width: auto; position: static; }
   #topmenu.nav > li > a { padding: 8px 12px !important; font-size: 14.5px; gap: 6px; border-radius: 10px; }
-  #topmenu.nav > li > a::after { display: none; }
+  #topmenu.nav > li > a::before { display: none; }
   /* logout sits in the top row, right of the status pill */
   #topmenu > li:has(> a[href*="/admin/logout"]) { position: absolute !important; top: 16px; right: 10px; margin: 0; padding: 0; border: 0; }
   #indicators { margin-right: 40px !important; }
-  #topmenu > li:has(> a[href*="/admin/logout"]) > a { font-size: 0 !important; padding: 8px !important; }
-  #topmenu > li:has(> a[href*="/admin/logout"]) > a::after { display: block; opacity: .7; }
+  #topmenu > li:has(> a[href*="/admin/logout"]) > a { font-size: 0 !important; padding: 8px !important; gap: 0; }
+  #topmenu > li:has(> a[href*="/admin/logout"]) > a::before { display: block; opacity: .7; }
 
   /* hover flyouts make no sense on touch */
   #topmenu .dropdown-menu, #topmenu > li:hover > .dropdown-menu { display: none !important; }

@@ -21,7 +21,7 @@ ring gauges on the status page and iOS-style switches.
 
 ## Features
 
-- **Sidebar navigation** with line icons; the current section stays expanded, the others open as flyouts. On phones it collapses into a top bar with a scrollable row of chips.
+- **Sidebar navigation** with line icons on sections and submenu items; the current section stays expanded, the others open as flyouts. On phones it collapses into a top bar with a scrollable row of chips.
 - **Card layout**: every section is a card; Status → Overview becomes a dashboard grid, interface and Wi-Fi lists render one card per row.
 - **Ring gauges** for memory, storage and connections instead of progress bars - pure CSS, no JavaScript.
 - **Line icons** for interface types, Wi-Fi signal and row actions (restart, stop, edit, delete, scan…), independent of the UI language.
@@ -75,6 +75,15 @@ The source of truth is `stylus/graphite.user.css`. After editing it run `tools/b
 regenerates `htdocs/luci-static/graphite/graphite.css` (Stylus wrapper removed, local
 `@font-face` rules added) and stamps the version from `VERSION` into the header template.
 
+To push a local build to a live router over SSH (defaults to `root@192.168.10.1`):
+
+```sh
+tools/deploy.sh
+# or: tools/deploy.sh root@192.168.1.1
+```
+
+The script rebuilds the CSS, uploads it to `/www/luci-static/graphite/`, and clears the LuCI cache.
+
 ## Layout
 
 ```
@@ -82,7 +91,7 @@ htdocs/luci-static/graphite/        graphite.css, fonts/
 ucode/template/themes/graphite/     header.ut, footer.ut, sysauth.ut (derived from Bootstrap)
 root/etc/uci-defaults/              registers and activates the theme
 stylus/graphite.user.css            design source / Stylus userstyle
-tools/                              build.sh, fonts.css
+tools/                              build.sh, deploy.sh, fonts.css
 install.sh, uninstall.sh
 ```
 
