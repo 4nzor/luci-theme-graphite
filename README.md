@@ -58,6 +58,9 @@ wget -qO- https://raw.githubusercontent.com/4nzor/luci-theme-graphite/main/unins
 `stylus/graphite.user.css` is the same design as a [Stylus](https://github.com/openstyles/stylus)
 userstyle. It applies to any LuCI page (`/cgi-bin/luci`) and loads the fonts from Google Fonts.
 
+If the theme is already installed on the router, **disable the Stylus style** (or keep it in
+sync with this file). An old Stylus copy will override the installed CSS and break the sidebar.
+
 ## Build from source
 
 ```sh

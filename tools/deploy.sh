@@ -18,7 +18,8 @@ command -v node >/dev/null 2>&1 || die "node not found (needed for nav layout ch
 sh tools/build.sh
 
 say "Fixture nav layout check"
-node tools/check-nav.mjs || die "fixture nav layout check failed"
+node tools/check-nav.mjs --shot /tmp/graphite-nav-fixture.png \
+  || die "fixture nav layout check failed"
 
 say "Uploading graphite.css ($VER) to $HOST"
 # OpenWrt often has no sftp-server; stream the file over ssh instead of scp.
@@ -48,7 +49,7 @@ printf '%s' "$SID"
 EOF
 )"
 [ -n "$SID" ] || die "could not create LuCI session for layout check"
-node tools/check-nav.mjs --url "$LUCI_URL" --cookie "$SID" \
-  || die "live nav layout check failed — deploy aborted visually"
+node tools/check-nav.mjs --url "$LUCI_URL" --cookie "$SID" --shot /tmp/graphite-nav-live.png \
+  || die "live nav layout check failed — see /tmp/graphite-nav-live.png"
 
 ok "Deployed $VER to $HOST and nav layout check passed. Hard-reload LuCI."

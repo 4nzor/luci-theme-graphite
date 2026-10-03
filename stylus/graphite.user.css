@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           LuCI Graphite
 @namespace      github.com/4nzor/luci-theme-graphite
-@version        1.1.1
+@version        1.1.2
 @description    Graphite: dark control-panel look for OpenWrt LuCI (Bootstrap) - sidebar navigation, card layout, ring gauges, iOS-style switches
 @homepageURL    https://github.com/4nzor/luci-theme-graphite
 @license        Apache-2.0
@@ -171,29 +171,36 @@ body.lang_uk header .brand::after { content: "онлайн"; }
   width: 100%;
 }
 #topmenu.nav > li > a {
-  /* icon is absolutely left-padded; label is normal text — no flex/grid gap Bootstrap can reopen */
-  display: block !important;
-  position: relative !important;
+  /* same packing model as submenu: icon column + label column (no absolute, no space-between) */
+  display: grid !important;
+  grid-template-columns: 20px minmax(0, 1fr) !important;
+  column-gap: 12px !important;
+  align-items: center !important;
+  justify-content: start !important;
+  justify-items: start !important;
   box-sizing: border-box;
   width: 100%;
-  padding: 12px 14px 12px 46px !important; /* 14 + 20 icon + 12 gap */
+  padding: 12px 14px !important;
   border-radius: var(--r-m);
   font-size: 15.5px;
   font-weight: 500;
   color: var(--ink-2) !important;
   background: transparent !important;
+  background-image: none !important;
   text-shadow: none !important;
   text-align: left !important;
+  text-indent: 0 !important;
   line-height: 1.2;
   transition: background .15s, color .15s;
 }
 #topmenu.nav > li > a::before {
   content: "" !important;
   display: block !important;
-  position: absolute !important;
-  left: 14px !important;
-  top: 50% !important;
-  transform: translateY(-50%);
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  float: none !important;
   width: 20px !important;
   height: 20px !important;
   margin: 0 !important;
@@ -203,7 +210,15 @@ body.lang_uk header .brand::after { content: "онлайн"; }
   mask: var(--ico, var(--ico-dot)) center / contain no-repeat;
   opacity: .62;
 }
-#topmenu.nav > li > a::after { display: none !important; content: none !important; width: 0 !important; height: 0 !important; margin: 0 !important; border: 0 !important; }
+#topmenu.nav > li > a::after {
+  display: none !important;
+  content: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: none !important;
+}
 #topmenu.nav > li:hover > a { background: var(--card) !important; color: var(--ink) !important; }
 #topmenu.nav > li:hover > a::before { opacity: .95; }
 

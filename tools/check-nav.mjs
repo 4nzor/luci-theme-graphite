@@ -1,20 +1,21 @@
 #!/usr/bin/env node
 /**
- * Fail if section links don't keep icon+label packed on the left.
+ * Fail if section links overlap icons/labels or stretch label to the far right.
  *
  *   tools/check-nav.mjs                         # local fixture
  *   tools/check-nav.mjs --url URL --cookie SID  # live LuCI
+ *   tools/check-nav.mjs --shot out.png          # also save sidebar PNG
  */
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve, dirname, extname } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const MIN_ICON_TO_TEXT = 40;   // padding-left ~46px (14 + 20 + 12)
-const MAX_ICON_TO_TEXT = 56;
-const MAX_RIGHT_SLACK = 80;    // label must not sit on the far right of a wide row
+const MIN_ICON_TO_TEXT = 40;  // pad 14 + icon 20 + gap ~6
+const MAX_ICON_TO_TEXT = 60;
+const MIN_GAP = 8;            // icon right → text left
 
 function arg(name, fallback = null) {
   const i = process.argv.indexOf(name);
@@ -34,12 +35,11 @@ function findChromium() {
   ].filter(Boolean);
   for (const p of candidates) {
     if (!existsSync(p)) continue;
-    // Homebrew's chromium is often a stub pointing at a missing .app — skip those.
     try {
       const body = readFileSync(p, 'utf8');
       if (body.includes('No such file') || body.includes('Caskroom')) continue;
     } catch {
-      // binary — fine
+      // binary
     }
     return p;
   }
@@ -80,8 +80,8 @@ class CDP {
   close() { this.ws.close(); }
 }
 
-async function connectTarget(port, url) {
-  const created = await fetch(`http://127.0.0.1:${port}/json/new?${encodeURIComponent(url)}`, { method: 'PUT' });
+async function connectTarget(port) {
+  const created = await fetch(`http://127.0.0.1:${port}/json/new?${encodeURIComponent('about:blank')}`, { method: 'PUT' });
   const target = await created.json();
   const ws = new WebSocket(target.webSocketDebuggerUrl);
   await new Promise((res, rej) => { ws.onopen = res; ws.onerror = rej; });
@@ -118,25 +118,51 @@ const PROBE = `(() => {
       }
     }
     const cs = getComputedStyle(a);
-    const iconToText = textRect ? textRect.left - br.left : null;
-    const rightSlack = textRect ? br.right - textRect.right : null;
     const padL = parseFloat(cs.paddingLeft) || 0;
+    const iconW = parseFloat(before.width) || 0;
+    const iconH = parseFloat(before.height) || 0;
+    // For static ::before in grid/flex, icon occupies the first content box after padding.
+    // For absolute ::before, left is relative to padding edge.
+    let iconLeft;
+    let iconRight;
+    if (before.position === 'absolute' || before.position === 'fixed') {
+      iconLeft = (parseFloat(before.left) || 0);
+      iconRight = iconLeft + iconW;
+    } else {
+      iconLeft = padL;
+      iconRight = padL + iconW;
+    }
+    const textLeft = textRect ? textRect.left - br.left : null;
+    const gap = textLeft == null ? null : textLeft - iconRight;
+    const rightSlack = textRect ? br.right - textRect.right : null;
     return {
       text: a.textContent.trim().replace(/\\s+/g, ' '),
       display: cs.display,
       justify: cs.justifyContent,
-      padL: Math.round(padL),
+      columns: cs.gridTemplateColumns,
       beforePos: before.position,
-      iconToText: iconToText == null ? null : Math.round(iconToText * 10) / 10,
+      padL: Math.round(padL * 10) / 10,
+      iconW: Math.round(iconW * 10) / 10,
+      iconH: Math.round(iconH * 10) / 10,
+      iconLeft: Math.round(iconLeft * 10) / 10,
+      iconRight: Math.round(iconRight * 10) / 10,
+      textLeft: textLeft == null ? null : Math.round(textLeft * 10) / 10,
+      gap: gap == null ? null : Math.round(gap * 10) / 10,
       rightSlack: rightSlack == null ? null : Math.round(rightSlack * 10) / 10,
       width: Math.round(br.width),
     };
   });
   const bad = rows.filter((r) => {
-    if (r.iconToText == null || r.padL < 40) return true;
-    if (r.iconToText < ${MIN_ICON_TO_TEXT} || r.iconToText > ${MAX_ICON_TO_TEXT}) return true;
-    // space-between look: wide row, label glued to the right edge
-    if (r.width > 160 && r.rightSlack != null && r.rightSlack < 40 && r.iconToText > 80) return true;
+    if (r.textLeft == null || r.gap == null) return true;
+    // overlap or cramped
+    if (r.gap < ${MIN_GAP}) return true;
+    if (r.textLeft < ${MIN_ICON_TO_TEXT} || r.textLeft > ${MAX_ICON_TO_TEXT}) return true;
+    // absolute icon + small padding = the 1.1.1 failure mode
+    if ((r.beforePos === 'absolute' || r.beforePos === 'fixed') && r.padL < 40) return true;
+    // space-between: wide row, label glued to the right
+    if (r.width > 160 && r.rightSlack != null && r.rightSlack < 40 && r.textLeft > 80) return true;
+    // must be grid or flex packing, not block+absolute
+    if (r.display === 'block' && (r.beforePos === 'absolute' || r.beforePos === 'fixed')) return true;
     return false;
   });
   return { ok: bad.length === 0, bad, rows };
@@ -145,6 +171,7 @@ const PROBE = `(() => {
 async function main() {
   const liveUrl = arg('--url');
   const cookie = arg('--cookie');
+  const shotPath = arg('--shot');
   const port = 9222 + Math.floor(Math.random() * 1000);
   const chromium = findChromium();
 
@@ -168,7 +195,7 @@ async function main() {
 
   try {
     await waitPort(port);
-    const cdp = await connectTarget(port, 'about:blank');
+    const cdp = await connectTarget(port);
     await cdp.send('Page.enable');
     await cdp.send('Emulation.setDeviceMetricsOverride', {
       width: 1440,
@@ -187,14 +214,29 @@ async function main() {
       });
     }
     await cdp.send('Page.navigate', { url: pageUrl });
-    await cdp.send('Page.loadEventFired').catch(() => {});
-    await new Promise((r) => setTimeout(r, 800));
+    await new Promise((r) => setTimeout(r, 1200));
     const { result } = await cdp.send('Runtime.evaluate', {
       expression: PROBE,
       returnByValue: true,
       awaitPromise: true,
     });
     const data = result.value;
+
+    if (shotPath) {
+      const header = await cdp.send('Runtime.evaluate', {
+        expression: `(() => { const h=document.querySelector('header'); if(!h) return null; const b=h.getBoundingClientRect(); return {x:b.x,y:b.y,width:Math.min(b.width,280),height:Math.min(b.height,720)}; })()`,
+        returnByValue: true,
+      });
+      const box = header.result.value || { x: 0, y: 0, width: 256, height: 700 };
+      const shot = await cdp.send('Page.captureScreenshot', {
+        format: 'png',
+        clip: { x: box.x, y: box.y, width: box.width, height: box.height, scale: 2 },
+        fromSurface: true,
+      });
+      writeFileSync(shotPath, Buffer.from(shot.data, 'base64'));
+      console.log(`[+] wrote screenshot ${shotPath}`);
+    }
+
     cdp.close();
 
     if (!data?.ok) {
@@ -204,7 +246,7 @@ async function main() {
     } else {
       console.log('[+] nav layout ok');
       for (const r of data.rows) {
-        console.log(`    ${r.text}: icon→text=${r.iconToText}px padL=${r.padL} rightSlack=${r.rightSlack} (${r.display}/${r.beforePos})`);
+        console.log(`    ${r.text}: text@${r.textLeft} gap=${r.gap} ${r.display}/${r.beforePos} cols=${r.columns}`);
       }
     }
   } finally {
