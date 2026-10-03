@@ -1,4 +1,4 @@
-/* luci-theme-graphite 1.1.3 | Apache-2.0 | built from stylus/graphite.user.css */
+/* luci-theme-graphite 1.1.4 | Apache-2.0 | built from stylus/graphite.user.css */
 /* JetBrains Mono cyrillic */
 @font-face {
   font-family: 'JetBrains Mono';
@@ -917,8 +917,16 @@ input[type="checkbox"]:focus-visible, input[type="radio"]:focus-visible {
 .alert-message.error, .alert-message.danger { box-shadow: inset 3px 0 0 var(--bad) !important; }
 .alert-message.success { box-shadow: inset 3px 0 0 var(--ok) !important; }
 
-#modal_overlay { background: rgba(0, 0, 0, .7) !important; backdrop-filter: blur(6px); animation: graphite-fade .18s ease both; }
+#modal_overlay {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, .7) !important;
+  backdrop-filter: blur(6px);
+  animation: graphite-fade .18s ease both;
+}
 #modal_overlay > .modal {
+  margin: 24px !important;
   padding: 28px !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: var(--r-xl) !important;
@@ -931,9 +939,11 @@ input[type="checkbox"]:focus-visible, input[type="radio"]:focus-visible {
 #modal_overlay .modal .cbi-value { border: 0; }
 #modal_overlay .modal .button-row { gap: 8px; }
 
-/* login: one quiet card on the canvas, stacked fields, full-width primary */
+/* login: compact stacked card — do not inherit form-row flex-basis:320px */
 #modal_overlay > .modal.login {
   width: min(400px, calc(100vw - 32px));
+  height: auto !important;
+  max-height: none !important;
   padding: 28px 28px 24px !important;
   border-radius: 22px !important;
   background:
@@ -948,13 +958,22 @@ input[type="checkbox"]:focus-visible, input[type="radio"]:focus-visible {
   text-transform: lowercase;
   color: var(--title, var(--ink));
 }
+#modal_overlay .modal.login .cbi-map,
+#modal_overlay .modal.login .cbi-section,
+#modal_overlay .modal.login .cbi-section-node {
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+}
 #modal_overlay .modal.login .cbi-value {
   display: flex !important;
   flex-direction: column !important;
+  flex: none !important;
   align-items: stretch !important;
   gap: 8px;
   padding: 8px 0 !important;
   margin: 0 !important;
+  height: auto !important;
   min-height: 0 !important;
   border: 0;
 }
@@ -970,7 +989,12 @@ input[type="checkbox"]:focus-visible, input[type="radio"]:focus-visible {
   color: var(--ink-3) !important;
 }
 #modal_overlay .modal.login .cbi-value-field {
+  /* global form rows use flex:1 1 320px — in a column that becomes 320px tall */
+  flex: none !important;
+  flex-basis: auto !important;
   width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
   float: none !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -978,15 +1002,22 @@ input[type="checkbox"]:focus-visible, input[type="radio"]:focus-visible {
 #modal_overlay .modal.login input[type="text"],
 #modal_overlay .modal.login input[type="password"] {
   width: 100% !important;
+  height: auto !important;
   min-height: 44px;
   box-sizing: border-box;
+}
+#modal_overlay .modal.login hr {
+  margin: 16px 0 4px !important;
+  border: 0;
+  border-top: 1px solid var(--line);
+  opacity: .7;
 }
 #modal_overlay .modal.login .alert-message { margin: 12px 0 4px !important; }
 #modal_overlay .modal.login .button-row,
 #modal_overlay .modal.login > .cbi-button,
 #modal_overlay .modal.login > button {
   width: 100%;
-  margin-top: 12px;
+  margin-top: 12px !important;
 }
 #modal_overlay .modal.login .cbi-button-positive,
 #modal_overlay .modal.login button.important {

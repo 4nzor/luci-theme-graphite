@@ -93,11 +93,13 @@ jobs:
           body: |
             ## Graphite ${{ github.ref_name }}
 
-            ### What's new in 1.1.3
+            ### What's new in 1.1.4
+            - Login card: stop form-row `flex-basis: 320px` from stretching fields; center modal
+
+            ### 1.1.3
             - Section icons use the same grid packing as submenu (no absolute / space-between)
             - Mobile: chip row for sections (`inline-flex`), submenu chips keep icons
             - Extra section/submenu icons (VPN, Statistics, AmneziaWG, …)
-            - Login modal: stacked fields without leftover Bootstrap gaps
             - CI: Chromium `--no-sandbox` + wait for styled `#topmenu` before layout gate
             - Docs screenshots refreshed (EN/RU)
 
