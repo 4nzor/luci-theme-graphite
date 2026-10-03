@@ -93,6 +93,14 @@ jobs:
           body: |
             ## Graphite ${{ github.ref_name }}
 
+            ### What's new in 1.1.3
+            - Section icons use the same grid packing as submenu (no absolute / space-between)
+            - Mobile: chip row for sections (`inline-flex`), submenu chips keep icons
+            - Extra section/submenu icons (VPN, Statistics, AmneziaWG, …)
+            - Login modal: stacked fields without leftover Bootstrap gaps
+            - CI: Chromium `--no-sandbox` + wait for styled `#topmenu` before layout gate
+            - Docs screenshots refreshed (EN/RU)
+
             Install over root SSH (picks `.apk` on OpenWrt 25.x, `.ipk` on 24.x):
 
             ```sh
@@ -104,3 +112,6 @@ jobs:
             ```sh
             wget -qO- https://raw.githubusercontent.com/4nzor/luci-theme-graphite/main/uninstall.sh | sh
             ```
+
+            If the sidebar looks overlapped after updating, disable any Stylus/userstyle
+            overrides for LuCI — stale absolute-icon rules will fight this theme.

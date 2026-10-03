@@ -44,7 +44,7 @@ printf 'graphite1\ngraphite1\n' | passwd root >/dev/null
 SID=$(ubus call session login '{"username":"root","password":"graphite1","timeout":600}' | jsonfilter -e '@.ubus_rpc_session')
 mv /tmp/shadow.graphite.bak /etc/shadow
 TOKEN=$(hexdump -n 16 -e '16/1 "%02x"' /dev/urandom)
-ubus call session set "{\"ubus_rpc_session\":\"$SID\",\"values\":{\"token\":\"$TOKEN\"}}" >/dev/null
+ubus call session set "{\"ubus_rpc_session\":\"$SID\",\"values\":{\"token\":\"$TOKEN\",\"username\":\"root\"}}" >/dev/null
 printf '%s' "$SID"
 EOF
 )"

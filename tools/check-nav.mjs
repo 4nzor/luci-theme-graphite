@@ -46,16 +46,17 @@ function findChromium() {
   throw new Error('chromium/chrome/brave not found; set CHROMIUM_PATH');
 }
 
-async function waitPort(port, ms = 8000) {
+async function waitPort(port, getErr = () => '', ms = 20000) {
   const t0 = Date.now();
   while (Date.now() - t0 < ms) {
     try {
       const r = await fetch(`http://127.0.0.1:${port}/json/version`);
       if (r.ok) return;
     } catch {}
-    await new Promise((r) => setTimeout(r, 100));
+    await new Promise((r) => setTimeout(r, 150));
   }
-  throw new Error(`DevTools not ready on ${port}`);
+  const hint = getErr().trim() ? `\nChromium stderr:\n${getErr().trim()}` : '';
+  throw new Error(`DevTools not ready on ${port}${hint}`);
 }
 
 class CDP {
@@ -185,16 +186,27 @@ async function main() {
 
   const chrome = spawn(chromium, [
     `--remote-debugging-port=${port}`,
+    '--remote-debugging-address=127.0.0.1',
     '--headless=new',
     '--disable-gpu',
+    '--no-sandbox',
+    '--disable-dev-shm-usage',
+    '--disable-extensions',
     '--no-first-run',
     '--no-default-browser-check',
-    '--user-data-dir=/tmp/graphite-check-nav',
+    `--user-data-dir=/tmp/graphite-check-nav-${port}`,
     'about:blank',
   ], { stdio: ['ignore', 'ignore', 'pipe'] });
 
+  // Surface Chromium startup errors when DevTools never comes up (common in CI).
+  let chromeErr = '';
+  chrome.stderr.on('data', (chunk) => {
+    chromeErr += chunk.toString();
+    if (chromeErr.length > 4000) chromeErr = chromeErr.slice(-4000);
+  });
+
   try {
-    await waitPort(port);
+    await waitPort(port, () => chromeErr);
     const cdp = await connectTarget(port);
     await cdp.send('Page.enable');
     await cdp.send('Emulation.setDeviceMetricsOverride', {
@@ -214,7 +226,47 @@ async function main() {
       });
     }
     await cdp.send('Page.navigate', { url: pageUrl });
-    await new Promise((r) => setTimeout(r, 1200));
+    // Live LuCI builds #topmenu async; CSS can lag behind DOM. Wait generously.
+    const waitMs = liveUrl ? 45000 : 15000;
+    const { result: ready } = await cdp.send('Runtime.evaluate', {
+      expression: `new Promise((resolve) => {
+        const t0 = Date.now();
+        const limit = ${waitMs};
+        (function tick() {
+          const a = document.querySelector('#topmenu.nav > li > a')
+            || document.querySelector('#topmenu > li > a');
+          const n = document.querySelectorAll('#topmenu.nav > li > a, #topmenu > li > a').length;
+          const cs = a ? getComputedStyle(a) : null;
+          const display = cs && cs.display;
+          const padL = cs ? parseFloat(cs.paddingLeft) : 0;
+          const styled = !!(cs && (
+            display === 'grid' || display === 'inline-flex' || display === 'flex' || padL >= 40
+          ));
+          if (n >= 1 && styled) return resolve({ ok: true, n, display, padL: cs.paddingLeft, ms: Date.now() - t0 });
+          if (Date.now() - t0 > limit) return resolve({
+            ok: false, n, display, padL: cs && cs.paddingLeft,
+            page: document.body && document.body.dataset.page,
+            hasPw: !!document.querySelector('#luci_password'),
+            ms: Date.now() - t0,
+          });
+          setTimeout(tick, 200);
+        })();
+      })`,
+      returnByValue: true,
+      awaitPromise: true,
+    });
+    if (!ready?.value?.ok) {
+      console.error('[-] timed out waiting for styled #topmenu', ready?.value);
+      if (shotPath) {
+        try {
+          const shot = await cdp.send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+          writeFileSync(shotPath, Buffer.from(shot.data, 'base64'));
+          console.error(`[-] wrote failure screenshot ${shotPath}`);
+        } catch {}
+      }
+      process.exitCode = 1;
+      return;
+    }
     const { result } = await cdp.send('Runtime.evaluate', {
       expression: PROBE,
       returnByValue: true,
