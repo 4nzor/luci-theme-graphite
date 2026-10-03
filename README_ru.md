@@ -59,6 +59,9 @@ wget -qO- https://raw.githubusercontent.com/4nzor/luci-theme-graphite/main/unins
 [Stylus](https://github.com/openstyles/stylus). Применяется к любой странице LuCI
 (`/cgi-bin/luci`), шрифты берёт с Google Fonts.
 
+Если тема уже стоит на роутере — **выключи Stylus** (или синхронизируй его с этим
+файлом). Старая копия в Stylus перебивает установленный CSS и ломает меню.
+
 ## Сборка из исходников
 
 ```sh
