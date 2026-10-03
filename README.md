@@ -82,7 +82,9 @@ tools/deploy.sh
 # or: tools/deploy.sh root@192.168.1.1
 ```
 
-The script rebuilds the CSS, uploads it to `/www/luci-static/graphite/`, and clears the LuCI cache.
+The script rebuilds the CSS, runs a headless nav-layout check (icon+label packed left),
+uploads to `/www/luci-static/graphite/`, clears the LuCI cache, then repeats the check
+against the live host. `tools/check-nav.mjs` is also gated in GitHub Actions.
 
 ## Layout
 

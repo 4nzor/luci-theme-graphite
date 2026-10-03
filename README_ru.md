@@ -83,7 +83,9 @@ tools/deploy.sh
 # или: tools/deploy.sh root@192.168.1.1
 ```
 
-Скрипт соберёт CSS, зальёт его в `/www/luci-static/graphite/` и сбросит кэш LuCI.
+Скрипт соберёт CSS, прогонит headless-проверку меню (иконка и текст слева вплотную),
+зальёт в `/www/luci-static/graphite/`, сбросит кэш LuCI и повторит проверку уже на
+живом хосте. Тот же `tools/check-nav.mjs` крутится в GitHub Actions.
 
 ## Лицензия
 

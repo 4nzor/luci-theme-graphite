@@ -34,7 +34,7 @@
 		<meta name="darkreader-lock">
 		<link rel="stylesheet" href="{{ media }}/../bootstrap/cascade.css">
 		<link rel="stylesheet" media="only screen and (max-device-width: 854px)" href="{{ media }}/../bootstrap/mobile.css" />
-		<link rel="stylesheet" href="{{ media }}/graphite.css?v=1.1.0">
+		<link rel="stylesheet" href="{{ media }}/graphite.css?v=1.1.1">
 		<link rel="icon" href="{{ media }}/../bootstrap/logo_48.png" sizes="48x48">
 		<link rel="icon" href="{{ media }}/../bootstrap/logo.svg" sizes="any">
 		{% if (node?.css): %}

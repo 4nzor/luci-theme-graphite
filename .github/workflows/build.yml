@@ -36,6 +36,18 @@ jobs:
             echo "PKG_VER=$(cat VERSION)" >> "$GITHUB_ENV"
           fi
 
+      - name: Check nav layout (screenshot gate)
+        if: matrix.format == 'ipk'
+        uses: browser-actions/setup-chrome@v1
+        id: setup-chrome
+
+      - name: Run nav layout check
+        if: matrix.format == 'ipk'
+        run: |
+          sh tools/build.sh
+          export CHROMIUM_PATH="${{ steps.setup-chrome.outputs.chrome-path }}"
+          node tools/check-nav.mjs
+
       - name: Fetch OpenWrt SDK
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq zstd rsync

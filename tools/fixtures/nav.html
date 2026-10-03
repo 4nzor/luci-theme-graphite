@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" data-darkmode="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Graphite nav layout fixture</title>
+  <style>
+    /* Bootstrap stubs that historically fight the sidebar */
+    .nav { display: block; float: left; }
+    .nav > li { display: block; float: left; }
+    .nav a { display: block; float: none; padding: 10px; }
+    a.menu:after {
+      width: 0; height: 0; display: inline-block; content: "";
+      margin-left: 4px; border-left: 4px solid transparent;
+      border-right: 4px solid transparent; border-top: 4px solid #fff;
+    }
+    html, body { margin: 0; height: 100%; background: #050505; }
+    /* isolate the sidebar geometry the theme expects on desktop */
+    header {
+      position: fixed !important;
+      inset: 0 auto 0 0 !important;
+      width: 256px !important;
+      min-height: 100vh;
+      padding: 12px !important;
+      box-sizing: border-box;
+      display: block !important;
+      background: #101012;
+    }
+  </style>
+  <link rel="stylesheet" href="../../htdocs/luci-static/graphite/graphite.css">
+</head>
+<body data-page="admin-status-overview">
+  <header>
+    <a class="brand" href="#">openwrt</a>
+    <ul id="topmenu" class="nav">
+      <li>
+        <a class="menu" href="/cgi-bin/luci/admin/status/overview">Status</a>
+        <ul class="dropdown-menu" style="display:block">
+          <li><a href="/cgi-bin/luci/admin/status/overview">Overview</a></li>
+          <li><a href="/cgi-bin/luci/admin/status/routes">Routing</a></li>
+          <li><a href="/cgi-bin/luci/admin/network/firewall">Firewall</a></li>
+        </ul>
+      </li>
+      <li><a class="menu" href="/cgi-bin/luci/admin/system/system">System</a></li>
+      <li><a class="menu" href="/cgi-bin/luci/admin/services/adblock">Services</a></li>
+      <li><a class="menu" href="/cgi-bin/luci/admin/network/network">Network</a></li>
+      <li><a href="/cgi-bin/luci/admin/logout">Log out</a></li>
+    </ul>
+  </header>
+</body>
+</html>
