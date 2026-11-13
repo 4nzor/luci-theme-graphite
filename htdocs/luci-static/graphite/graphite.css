@@ -1,4 +1,4 @@
-/* luci-theme-graphite 1.1.4 | Apache-2.0 | built from stylus/graphite.user.css */
+/* luci-theme-graphite 1.2.0 | Apache-2.0 | built from stylus/graphite.user.css */
 /* JetBrains Mono cyrillic */
 @font-face {
   font-family: 'JetBrains Mono';
@@ -444,24 +444,27 @@ body[data-page^="admin-statistics"] #topmenu > li:has(a[href*="/admin/statistics
 #topmenu.nav .dropdown-menu > li > a[href*="/admin/system/admin/uhttpd"],
 #topmenu.nav .dropdown-menu > li > a[href*="/admin/system/admin/repokeys"] { --sub: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='8' cy='15' r='3'/%3E%3Cpath d='M11 15h8l-1.6 1.8M16.2 15v2'/%3E%3C/svg%3E"); }
 
-body[data-page^="admin-status"]     #topmenu > li:has(a[href*="/admin/status/"]) > .dropdown-menu,
-body[data-page^="admin-system"]     #topmenu > li:has(a[href*="/admin/system/"]) > .dropdown-menu,
-body[data-page^="admin-services"]   #topmenu > li:has(a[href*="/admin/services/"]) > .dropdown-menu,
-body[data-page^="admin-network"]    #topmenu > li:has(a[href*="/admin/network/"]) > .dropdown-menu,
-body[data-page^="admin-vpn"]        #topmenu > li:has(a[href*="/admin/vpn/"]) > .dropdown-menu,
-body[data-page^="admin-statistics"] #topmenu > li:has(a[href*="/admin/statistics/"]) > .dropdown-menu {
-  display: block !important;
-  position: static !important;
-  min-width: 0;
-  margin: 2px 0 6px 16px !important;
-  padding: 2px 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  border-left: 1px solid var(--line) !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  opacity: 1 !important;
-  transform: none !important;
+@media (width > 900px) {
+  body[data-page^="admin-status"]     #topmenu > li:has(a[href*="/admin/status/"]) > .dropdown-menu,
+  body[data-page^="admin-system"]     #topmenu > li:has(a[href*="/admin/system/"]) > .dropdown-menu,
+  body[data-page^="admin-services"]   #topmenu > li:has(a[href*="/admin/services/"]) > .dropdown-menu,
+  body[data-page^="admin-network"]    #topmenu > li:has(a[href*="/admin/network/"]) > .dropdown-menu,
+  body[data-page^="admin-vpn"]        #topmenu > li:has(a[href*="/admin/vpn/"]) > .dropdown-menu,
+  body[data-page^="admin-statistics"] #topmenu > li:has(a[href*="/admin/statistics/"]) > .dropdown-menu,
+  .graphite-simple #topmenu > li.graphite-expanded > .dropdown-menu {
+    display: block !important;
+    position: static !important;
+    min-width: 0;
+    margin: 2px 0 6px 16px !important;
+    padding: 2px 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-left: 1px solid var(--line) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /* current page in the expanded submenu (LuCI gives no class, so map data-page -> link) */
@@ -499,7 +502,7 @@ body[data-page^="admin-network-firewall"] #topmenu .dropdown-menu a[href$="/admi
   box-shadow: none !important;
 }
 /* desktop expanded submenu: same grid, slightly tighter */
-@media (min-width: 901px) {
+@media (width > 900px) {
   body[data-page^="admin-status"]     #topmenu > li:has(a[href*="/admin/status/"]) > .dropdown-menu > li > a,
   body[data-page^="admin-system"]     #topmenu > li:has(a[href*="/admin/system/"]) > .dropdown-menu > li > a,
   body[data-page^="admin-services"]   #topmenu > li:has(a[href*="/admin/services/"]) > .dropdown-menu > li > a,
@@ -1621,161 +1624,179 @@ select[multiple] { background: var(--field) !important; border: 1px solid var(--
 .cbi-dynlist > .item:hover::after { background: var(--bad); }
 .cbi-dynlist > .add-item { display: flex; gap: 6px; align-items: center; }
 
-/* ============ Narrow screens (phones): top bar + chip navigation ============ */
+/* ============ Navigation controls ============ */
+#graphite-menu { display: none; }
+#graphite-simple-mode { display: none; }
+.graphite-nav-ready #graphite-simple-mode {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  text-align: left;
+  border: 1px solid var(--line) !important;
+  background: var(--card) !important;
+  color: var(--ink-2) !important;
+}
+#graphite-simple-mode::after {
+  content: "";
+  flex: none;
+  width: 28px;
+  height: 16px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 8px 50%, var(--ink-2) 4px, transparent 4.5px) var(--field);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+#graphite-simple-mode[aria-pressed="true"]::after {
+  background: radial-gradient(circle at 20px 50%, var(--on-accent) 4px, transparent 4.5px) var(--accent);
+}
+.graphite-simple #topmenu.nav .graphite-advanced,
+body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
+.graphite-simple #modemenu { display: none !important; }
+
+/* ============ Narrow screens ============ */
 @media (max-width: 900px) {
-  /* header: brand + status pill on one line, sections below */
   header {
     position: sticky !important;
-    top: 0;
+    inset: 0 0 auto !important;
     width: auto;
     height: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    gap: 10px;
-    padding: 12px 12px 10px !important;
-    overflow: visible !important;
-    background: color-mix(in srgb, var(--canvas) 88%, transparent) !important;
+    gap: 0 8px;
+    padding: 8px max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left)) !important;
+    border-bottom: 1px solid var(--line) !important;
+    background: color-mix(in srgb, var(--canvas) 94%, transparent) !important;
     backdrop-filter: blur(14px);
   }
   header .brand {
-    display: flex !important;
-    order: 1;
-    flex: 1 1 auto;
-    padding: 10px 14px !important;
+    min-width: 0;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 6px 8px !important;
+    border: 0;
+    background: none !important;
+    box-shadow: none;
     font-size: 18px !important;
-    border-radius: 14px;
   }
+  header .brand span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   header .brand::after { display: none !important; }
-  #indicators { order: 2; margin: 0 !important; flex: none; }
-  header [data-indicator] { padding: 7px 11px !important; font-size: 12px; }
-
-  /* sections: one compact row, text only; logout collapses to its icon */
-  #topmenu.nav {
-    position: static !important;
-    order: 3;
-    flex: none;
-    min-height: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
+  .graphite-nav-ready #graphite-menu {
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
-    width: 100%;
-    overflow: visible;
-  }
-  #topmenu.nav > li { width: auto; position: static; }
-  #topmenu.nav > li > a {
-    display: inline-flex !important;
-    grid-template-columns: none !important;
-    align-items: center !important;
-    gap: 6px !important;
-    width: auto !important;
+    gap: 8px;
+    min-height: 44px;
     padding: 8px 12px !important;
-    font-size: 14.5px;
-    border-radius: 10px;
+    background: var(--card) !important;
+    border: 1px solid var(--line-strong) !important;
   }
-  #topmenu.nav > li > a::before { display: none !important; content: none !important; }
-  /* logout sits in the top row, right of the status pill */
-  #topmenu > li:has(> a[href*="/admin/logout"]) { position: absolute !important; top: 16px; right: 10px; margin: 0; padding: 0; border: 0; }
-  #indicators { margin-right: 40px !important; }
-  #topmenu > li:has(> a[href*="/admin/logout"]) > a { font-size: 0 !important; padding: 8px !important; gap: 0; }
-  #topmenu > li:has(> a[href*="/admin/logout"]) > a::before { display: block !important; opacity: .7; }
+  #graphite-menu::before {
+    content: "";
+    width: 16px;
+    height: 12px;
+    background: linear-gradient(currentColor 0 0) top / 100% 2px,
+      linear-gradient(currentColor 0 0) center / 100% 2px,
+      linear-gradient(currentColor 0 0) bottom / 100% 2px;
+    background-repeat: no-repeat;
+  }
+  #graphite-menu[aria-expanded="true"] { color: var(--accent) !important; }
 
-  /* hover flyouts make no sense on touch */
-  #topmenu .dropdown-menu, #topmenu > li:hover > .dropdown-menu { display: none !important; }
+  #indicators {
+    grid-column: 1 / -1;
+    margin: 0 !important;
+    min-width: 0;
+  }
+  header [data-indicator]:not([data-indicator="poll-status"]) {
+    margin-top: 6px !important;
+    min-height: 32px;
+    white-space: normal;
+  }
+  header [data-indicator="poll-status"] { display: none !important; }
 
-  /* the current section's submenu becomes a scrollable chip row under the sections */
-  body[data-page^="admin-status"] #topmenu.nav > li:has(a[href*="/admin/status/"]),
-  body[data-page^="admin-system"] #topmenu.nav > li:has(a[href*="/admin/system/"]),
-  body[data-page^="admin-services"] #topmenu.nav > li:has(a[href*="/admin/services/"]),
-  body[data-page^="admin-network"] #topmenu.nav > li:has(a[href*="/admin/network/"]),
-  body[data-page^="admin-vpn"] #topmenu.nav > li:has(a[href*="/admin/vpn/"]),
-  body[data-page^="admin-statistics"] #topmenu.nav > li:has(a[href*="/admin/statistics/"]) { display: contents; }
-  body[data-page^="admin-status"] #topmenu.nav > li:has(a[href*="/admin/status/"]) > .dropdown-menu,
-  body[data-page^="admin-system"] #topmenu.nav > li:has(a[href*="/admin/system/"]) > .dropdown-menu,
-  body[data-page^="admin-services"] #topmenu.nav > li:has(a[href*="/admin/services/"]) > .dropdown-menu,
-  body[data-page^="admin-network"] #topmenu.nav > li:has(a[href*="/admin/network/"]) > .dropdown-menu,
-  body[data-page^="admin-vpn"] #topmenu.nav > li:has(a[href*="/admin/vpn/"]) > .dropdown-menu,
-  body[data-page^="admin-statistics"] #topmenu.nav > li:has(a[href*="/admin/statistics/"]) > .dropdown-menu {
-    display: flex !important;
-    order: 100;
-    flex: 0 0 100%;
-    flex-wrap: nowrap;
-    gap: 6px;
-    margin: 4px -12px 0 !important;
-    padding: 2px 12px 2px !important;
-    border: 0 !important;
-    overflow-x: auto;
-    scrollbar-width: none;
+  #topmenu.nav {
+    grid-column: 1 / -1;
     position: static !important;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    max-height: min(48vh, 24rem);
+    max-height: min(48dvh, 24rem);
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: 4px !important;
+    box-sizing: border-box;
+    gap: 4px;
+  }
+  .graphite-nav-ready #graphite-menu[aria-expanded="false"] ~ #topmenu.nav,
+  .graphite-nav-ready #graphite-menu[aria-expanded="false"] ~ #graphite-simple-mode { display: none !important; }
+  #graphite-simple-mode { grid-column: 1 / -1; margin-top: 6px; }
+  #topmenu.nav > li { flex: none; }
+  #topmenu.nav > li > a { min-height: 44px; padding: 8px 10px !important; box-shadow: none !important; }
+  #topmenu.nav > li:has(> .dropdown-menu) > a { grid-template-columns: 20px minmax(0, 1fr) 8px !important; }
+  #topmenu.nav > li:has(> .dropdown-menu) > a::after {
+    display: block !important;
+    content: "" !important;
+    width: 6px !important;
+    height: 6px !important;
+    border-right: 1.5px solid currentColor !important;
+    border-bottom: 1.5px solid currentColor !important;
+    transform: rotate(45deg);
+  }
+  #topmenu.nav > .graphite-expanded > a::after { transform: rotate(225deg); }
+  #topmenu.nav > li:has(> a[href*="/admin/logout"]) { margin-top: 4px; padding-top: 4px; }
+
+  #topmenu.nav > li > .dropdown-menu,
+  #topmenu.nav > li:hover > .dropdown-menu {
+    display: none !important;
+    position: static !important;
+    min-width: 0;
+    margin: 0 0 4px 20px !important;
+    padding: 2px 0 2px 8px !important;
+    border: 0 !important;
+    border-left: 1px solid var(--line) !important;
+    border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
-  #topmenu .dropdown-menu::-webkit-scrollbar { display: none; }
-  #topmenu .dropdown-menu li { width: auto; flex: none; }
-  #topmenu .dropdown-menu a {
-    display: grid !important;
-    grid-template-columns: 16px minmax(0, 1fr) !important;
-    column-gap: 8px !important;
-    align-items: center !important;
-    padding: 7px 13px !important;
-    border-radius: 999px !important;
-    background: var(--card) !important;
-    font-size: 13.5px;
-    box-shadow: none !important;
+  #topmenu.nav > li.graphite-expanded > .dropdown-menu,
+  body:not(.graphite-nav-ready) #topmenu.nav > li:hover > .dropdown-menu,
+  body:not(.graphite-nav-ready) #topmenu.nav > li:focus-within > .dropdown-menu { display: block !important; }
+  #topmenu.nav .dropdown-menu::before { display: none; }
+  #topmenu.nav .dropdown-menu > li { width: 100%; }
+  #topmenu.nav .dropdown-menu > li > a {
+    min-height: 44px;
+    box-sizing: border-box;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
-  #topmenu .dropdown-menu a::before {
-    position: static !important;
-    left: auto !important;
-    top: auto !important;
-    transform: none !important;
-  }
-  body[data-page^="admin-status-overview"] #topmenu .dropdown-menu a[href$="/admin/status/overview"],
-  body[data-page^="admin-status-routesj"] #topmenu .dropdown-menu a[href$="/admin/status/routesj"],
-  body[data-page^="admin-status-nftables"] #topmenu .dropdown-menu a[href$="/admin/status/nftables"],
-  body[data-page^="admin-status-logs"] #topmenu .dropdown-menu a[href$="/admin/status/logs"],
-  body[data-page^="admin-status-processes"] #topmenu .dropdown-menu a[href$="/admin/status/processes"],
-  body[data-page^="admin-status-channel_analysis"] #topmenu .dropdown-menu a[href$="/admin/status/channel_analysis"],
-  body[data-page^="admin-status-realtime"] #topmenu .dropdown-menu a[href$="/admin/status/realtime"],
-  body[data-page^="admin-status-amneziawg"] #topmenu .dropdown-menu a[href$="/admin/status/amneziawg"],
-  body[data-page^="admin-system-system"] #topmenu .dropdown-menu a[href$="/admin/system/system"],
-  body[data-page^="admin-system-admin"] #topmenu .dropdown-menu a[href$="/admin/system/admin"],
-  body[data-page^="admin-system-package-manager"] #topmenu .dropdown-menu a[href$="/admin/system/package-manager"],
-  body[data-page^="admin-system-startup"] #topmenu .dropdown-menu a[href$="/admin/system/startup"],
-  body[data-page^="admin-system-crontab"] #topmenu .dropdown-menu a[href$="/admin/system/crontab"],
-  body[data-page^="admin-system-attendedsysupgrade"] #topmenu .dropdown-menu a[href$="/admin/system/attendedsysupgrade"],
-  body[data-page^="admin-system-leds"] #topmenu .dropdown-menu a[href$="/admin/system/leds"],
-  body[data-page^="admin-system-flash"] #topmenu .dropdown-menu a[href$="/admin/system/flash"],
-  body[data-page^="admin-system-reboot"] #topmenu .dropdown-menu a[href$="/admin/system/reboot"],
-  body[data-page^="admin-services-adblock"] #topmenu .dropdown-menu a[href$="/admin/services/adblock"],
-  body[data-page^="admin-network-network"] #topmenu .dropdown-menu a[href$="/admin/network/network"],
-  body[data-page^="admin-network-wireless"] #topmenu .dropdown-menu a[href$="/admin/network/wireless"],
-  body[data-page^="admin-network-routes"] #topmenu .dropdown-menu a[href$="/admin/network/routes"],
-  body[data-page^="admin-network-dhcp"] #topmenu .dropdown-menu a[href$="/admin/network/dhcp"],
-  body[data-page^="admin-network-dns"] #topmenu .dropdown-menu a[href$="/admin/network/dns"],
-  body[data-page^="admin-network-diagnostics"] #topmenu .dropdown-menu a[href$="/admin/network/diagnostics"],
-  body[data-page^="admin-network-firewall"] #topmenu .dropdown-menu a[href$="/admin/network/firewall"] {
-    background: color-mix(in srgb, var(--accent) 18%, var(--card)) !important;
-    color: var(--ink) !important;
-    box-shadow: none !important;
+  #topmenu.nav .dropdown-menu > li > a[aria-current="page"] {
+    color: var(--accent) !important;
+    background: color-mix(in srgb, var(--accent) 14%, var(--card)) !important;
   }
 
   /* content panel */
   #maincontent.container, footer { margin: 0 8px 8px !important; }
   #maincontent.container {
     min-height: 0;
-    padding: 22px 12px 24px !important;
-    border-radius: 22px;
+    padding: 18px 8px 20px !important;
+    border: 0;
+    border-radius: 0;
+    background: var(--canvas);
+    box-shadow: none;
   }
-  #maincontent h2 { max-width: none; font-size: 28px; margin-bottom: 16px !important; }
-  #topmenu.nav > li > a { box-shadow: none !important; }
+  #maincontent h2 { max-width: none; font-size: 30px; margin: 0 0 6px !important; }
   #maincontent h3, .cbi-section > legend { font-size: 21px; }
   .cbi-title > h3, .cbi-section > h3 { font-size: 18px !important; }
   #maincontent .cbi-map > .cbi-section,
   #maincontent .cbi-map > fieldset.cbi-section,
   #view > .cbi-section,
-  #maincontent .cbi-map-tabbed > .cbi-section {
-    padding: 16px 14px 12px !important;
+  #maincontent .cbi-map-tabbed > .cbi-section,
+  #view > div > .cbi-section:not(.cbi-section .cbi-section) {
+    padding: 16px !important;
     border-radius: 18px !important;
     margin-bottom: 12px !important;
   }
@@ -1787,21 +1808,36 @@ select[multiple] { background: var(--field) !important; border: 1px solid var(--
     scrollbar-width: none;
     margin-bottom: 18px !important;
   }
-  #tabmenu .tabs > li, .cbi-tabmenu > li { flex: none; }
+  #tabmenu .tabs > li, .cbi-tabmenu > li { flex: none; height: auto; }
+  #tabmenu .tabs > li > a, .cbi-tabmenu > li > a { min-height: 44px; }
 
   /* dashboard grid collapses to one column */
   body[data-page="admin-status-overview"] #view { grid-template-columns: minmax(0, 1fr) !important; gap: 12px; }
   #maincontent .cbi-section, #view > * { min-width: 0; max-width: 100%; box-sizing: border-box; }
 
-  /* key/value tables (overview): label above value, no cramped 33% column */
+  /* Keep short status values beside their labels and let long values wrap. */
+  body[data-page="admin-status-overview"] #view .cbi-section > div > table.table:not(:has(.th, .cbi-progressbar, [data-title])) {
+    display: block;
+    border: 0 !important;
+  }
+  body[data-page="admin-status-overview"] #view .cbi-section > div > table.table:not(:has(.th, .cbi-progressbar, [data-title])) > tbody {
+    display: block;
+  }
+  body[data-page="admin-status-overview"] #view .cbi-section > div > table.table:not(:has(.th, .cbi-progressbar, [data-title])) .tr {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    align-items: baseline;
+    gap: 10px;
+  }
   .table .tr { margin: 0 !important; padding: 10px 0 !important; border-top: 1px solid var(--line) !important; }
   .table .tr:first-child { border-top: 0 !important; }
   .table .td { padding: 2px 4px !important; font-size: 14.5px; border: 0 !important; }
-  body[data-page="admin-status-overview"] #view > .cbi-section .table .td:first-child { flex-basis: 100% !important; width: auto !important; font-size: 13px; }
+  body[data-page="admin-status-overview"] #view > .cbi-section .table .td:first-child { width: auto !important; font-size: 13px; }
+  #maincontent .table .td { min-width: 0; overflow-wrap: anywhere; }
   .td[data-title]::before { font-weight: 500 !important; color: var(--ink-3); font-size: 12.5px; margin-bottom: 2px; }
 
-  /* ring gauges: three per row */
-  body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+  /* Fit the gauges without clipping their labels at narrow widths. */
+  body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) { grid-template-columns: repeat(auto-fit, minmax(82px, 1fr)); gap: 6px; }
   body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) .tr { padding: 12px 6px 10px !important; border: 0 !important; }
   /* mobile.css gives cells flex: 1 1 50% + overflow: hidden, which in a column squashes the label and clips the caption */
   body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) .td {
@@ -1815,19 +1851,44 @@ select[multiple] { background: var(--field) !important; border: 1px solid var(--
   body[data-page="admin-status-overview"] #view .cbi-progressbar { --d: 76px; }
   body[data-page="admin-status-overview"] #view .cbi-progressbar > div::before { --sweep: calc(var(--n) * 360deg / 76); background: conic-gradient(var(--accent) var(--sweep), var(--canvas) 0); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px)); mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px)); }
   body[data-page="admin-status-overview"] #view .cbi-progressbar > div::after { counter-reset: pct round(calc(tan(atan2(100cqw, 1px)) * 100 / 76)); font-size: 18px; }
-  body[data-page="admin-status-overview"] #view .cbi-progressbar::before { width: 110px; font-size: 11px !important; }
+  body[data-page="admin-status-overview"] #view .cbi-progressbar::before { width: 100%; overflow-wrap: anywhere; font-size: 11px !important; }
+  body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) .td { overflow-wrap: normal; hyphens: auto; }
 
   /* form rows stack */
   .cbi-value { display: block; padding: 12px 0 !important; }
   .cbi-value-title { display: block; margin-bottom: 8px; }
-  .cbi-value-field { width: 100% !important; }
-  input[type="text"], input[type="password"], input:not([type]), select:not([multiple]), .cbi-dropdown:not(.btn):not(.cbi-button) { width: 100% !important; max-width: none; }
+  .cbi-value-field { min-width: 0; width: 100% !important; }
+  input:is([type="text"], [type="password"], [type="number"], [type="email"], [type="url"], :not([type])),
+  textarea, select, .cbi-dropdown:not(.btn):not(.cbi-button) {
+    box-sizing: border-box;
+    width: 100% !important;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+  }
+  .cbi-value-field .control-group { height: auto; max-width: 100%; }
+  #modal_overlay { z-index: 2200; }
+  #modal_overlay > .modal, #modal_overlay > .modal.login {
+    box-sizing: border-box;
+    width: min(540px, calc(100% - 24px));
+    min-width: 0;
+    max-width: 100%;
+    max-height: calc(100vh - 24px) !important;
+    max-height: calc(100dvh - 24px) !important;
+    margin: 12px !important;
+    padding: 20px !important;
+    overflow: auto;
+  }
+  #modal_overlay > .modal.login { width: min(400px, calc(100% - 24px)); }
 
   /* list pages: the whole row is the card, not each cell */
   body[data-page="admin-network-network"] #cbi-network-interface .cbi-section-table,
   body[data-page="admin-network-wireless"] .cbi-tblsection > .cbi-section-table { display: flex !important; flex-direction: column; gap: 10px; margin: 0; }
   body[data-page="admin-network-network"] #cbi-network-interface .cbi-section-table-row,
   body[data-page="admin-network-wireless"] .cbi-tblsection > .cbi-section-table .cbi-section-table-row {
+    display: flex !important;
+    flex-wrap: wrap;
     background: var(--card) !important;
     border: 1px solid var(--line) !important;
     border-radius: 18px;
@@ -1851,13 +1912,16 @@ select[multiple] { background: var(--field) !important; border: 1px solid var(--
   /* actions bar spans the width, buttons share it */
   .cbi-page-actions {
     display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    bottom: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    bottom: max(8px, env(safe-area-inset-bottom));
+    margin: 16px 0 0 !important;
     padding: 8px !important;
     gap: 6px;
     border-radius: 16px !important;
   }
-  .cbi-page-actions > * { width: 100% !important; min-width: 0; }
+  .cbi-page-actions::after { content: none; }
+  .cbi-page-actions > * { width: 100% !important; min-width: 0; margin: 0 !important; }
+  .cbi-page-actions :is(.cbi-button, button) { min-height: 44px; white-space: normal; }
   .cbi-page-actions > .cbi-button-apply, .cbi-page-actions > .cbi-dropdown { grid-column: 1 / -1; }
   .cbi-page-actions > .cbi-dropdown > ul > li { justify-content: center; }
 
@@ -1869,6 +1933,12 @@ select[multiple] { background: var(--field) !important; border: 1px solid var(--
   #tabmenu .tabs > li, .cbi-tabmenu > li { max-width: none !important; }
   #tabmenu .tabs > li > a, .cbi-tabmenu > li > a { white-space: nowrap; max-width: none !important; overflow: visible !important; text-overflow: clip !important; }
   footer { padding: 12px 16px !important; }
+}
+
+@media (max-width: 360px) {
+  body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

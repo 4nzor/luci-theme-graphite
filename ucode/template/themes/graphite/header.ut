@@ -34,7 +34,7 @@
 		<meta name="darkreader-lock">
 		<link rel="stylesheet" href="{{ media }}/../bootstrap/cascade.css">
 		<link rel="stylesheet" media="only screen and (max-device-width: 854px)" href="{{ media }}/../bootstrap/mobile.css" />
-		<link rel="stylesheet" href="{{ media }}/graphite.css?v=1.1.4">
+		<link rel="stylesheet" href="{{ media }}/graphite.css?v=1.2.0">
 		<link rel="icon" href="{{ media }}/../bootstrap/logo_48.png" sizes="48x48">
 		<link rel="icon" href="{{ media }}/../bootstrap/logo.svg" sizes="any">
 		{% if (node?.css): %}
@@ -50,10 +50,13 @@
 	<body class="lang_{{ dispatcher.lang }} {{ entityencode(striptags(node?.title ?? ''), true) }}" data-page="{{ entityencode(join('-', ctx.request_path), true) }}">
 		{% if (!blank_page): %}
 		<header>
-			<a class="brand" href="/">{{ striptags(boardinfo.hostname ?? '?') }}</a>
+			<a class="brand" href="/"><span>{{ striptags(boardinfo.hostname ?? '?') }}</span></a>
+			<button type="button" id="graphite-menu" aria-expanded="false" aria-controls="topmenu graphite-simple-mode">{{ dispatcher.lang == 'ru' ? 'Меню' : _('Menu') }}</button>
 			<ul class="nav" id="topmenu" style="display:none"></ul>
+			<button type="button" id="graphite-simple-mode" aria-pressed="false">{{ dispatcher.lang == 'ru' ? 'Простой режим' : _('Simple Mode') }}</button>
 			<div id="indicators" class="pull-right"></div>
 		</header>
+		<script src="{{ media }}/navigation.js?v=1.2.0" defer></script>
 
 		<div id="maincontent" class="container">
 			{% if (getuid() == 0 && getspnam('root')?.pwdp === ''): %}
