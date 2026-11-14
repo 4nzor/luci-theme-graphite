@@ -2,6 +2,7 @@
   'use strict';
 
   const menu = document.getElementById('topmenu');
+  const navigation = document.getElementById('graphite-navigation');
   const menuButton = document.getElementById('graphite-menu');
   const simpleButton = document.getElementById('graphite-simple-mode');
   const narrow = matchMedia('(max-width: 900px)');
@@ -83,9 +84,18 @@
     updateMenu();
   });
 
+  function dismissOutside(event) {
+    if (menuButton.getAttribute('aria-expanded') === 'true' &&
+        !navigation.contains(event.target) && !menuButton.contains(event.target)) {
+      setMenu(false);
+    }
+  }
+
+  document.addEventListener('pointerdown', dismissOutside);
+  document.addEventListener('focusin', dismissOutside);
+
   document.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape' || menuButton.getAttribute('aria-expanded') !== 'true' ||
-        !menu.closest('header').contains(document.activeElement)) return;
+    if (event.key !== 'Escape' || menuButton.getAttribute('aria-expanded') !== 'true') return;
     setMenu(false);
     menuButton.focus();
   });

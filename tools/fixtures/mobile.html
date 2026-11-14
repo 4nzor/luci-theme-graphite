@@ -12,9 +12,11 @@
 <body class="lang_ru" data-page="admin-status-overview">
   <header>
     <a class="brand" href="/"><span>openwrt</span></a>
-    <button type="button" id="graphite-menu" aria-expanded="false" aria-controls="topmenu graphite-simple-mode">Меню</button>
-    <ul class="nav" id="topmenu" style="display:none"></ul>
-    <button type="button" id="graphite-simple-mode" aria-pressed="false">Простой режим</button>
+    <button type="button" id="graphite-menu" aria-expanded="false" aria-controls="graphite-navigation">Меню</button>
+    <div id="graphite-navigation">
+      <ul class="nav" id="topmenu" style="display:none"></ul>
+      <button type="button" id="graphite-simple-mode" aria-pressed="false">Простой режим</button>
+    </div>
     <div id="indicators" class="pull-right">
       <div data-indicator="poll-status">Обновляется</div>
       <a href="#" data-indicator="uci-changes" data-style="active">Несохранённые изменения: 3</a>

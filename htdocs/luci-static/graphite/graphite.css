@@ -1625,6 +1625,7 @@ select[multiple] { background: var(--field) !important; border: 1px solid var(--
 .cbi-dynlist > .add-item { display: flex; gap: 6px; align-items: center; }
 
 /* ============ Navigation controls ============ */
+#graphite-navigation { display: contents; }
 #graphite-menu { display: none; }
 #graphite-simple-mode { display: none; }
 .graphite-nav-ready #graphite-simple-mode {
@@ -1701,20 +1702,55 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
       linear-gradient(currentColor 0 0) bottom / 100% 2px;
     background-repeat: no-repeat;
   }
-  #graphite-menu[aria-expanded="true"] { color: var(--accent) !important; }
+  #graphite-menu[aria-expanded="true"] {
+    color: var(--ink) !important;
+    background: var(--card-hover) !important;
+  }
+  #graphite-menu[aria-expanded="true"]::before {
+    background: linear-gradient(45deg, transparent 44%, currentColor 46% 54%, transparent 56%),
+      linear-gradient(-45deg, transparent 44%, currentColor 46% 54%, transparent 56%);
+    width: 14px;
+    height: 14px;
+    margin-inline: 1px;
+  }
 
   #indicators {
     grid-column: 1 / -1;
     margin: 0 !important;
     min-width: 0;
+    padding-inline: 4px;
   }
   header [data-indicator]:not([data-indicator="poll-status"]) {
-    margin-top: 6px !important;
+    margin-top: 4px !important;
     min-height: 32px;
+    padding: 4px 8px !important;
     white-space: normal;
+    font-size: 12px;
+    text-transform: none;
+  }
+  header [data-indicator][data-style="active"] {
+    background: color-mix(in srgb, var(--accent) 10%, var(--canvas)) !important;
+    border-color: color-mix(in srgb, var(--accent) 28%, var(--canvas));
+    color: var(--accent) !important;
   }
   header [data-indicator="poll-status"] { display: none !important; }
 
+  .graphite-nav-ready #graphite-navigation {
+    position: absolute;
+    inset: calc(100% + 6px) max(12px, env(safe-area-inset-right)) auto auto;
+    display: flex;
+    flex-direction: column;
+    width: min(360px, calc(100% - 24px));
+    max-height: min(60vh, 28rem);
+    max-height: min(60dvh, 28rem);
+    box-sizing: border-box;
+    padding: 6px;
+    border: 1px solid var(--line-strong);
+    border-radius: 16px;
+    background: var(--panel);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .55);
+  }
+  .graphite-nav-ready #graphite-menu[aria-expanded="false"] + #graphite-navigation { display: none; }
   #topmenu.nav {
     grid-column: 1 / -1;
     position: static !important;
@@ -1728,9 +1764,18 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
     box-sizing: border-box;
     gap: 4px;
   }
-  .graphite-nav-ready #graphite-menu[aria-expanded="false"] ~ #topmenu.nav,
-  .graphite-nav-ready #graphite-menu[aria-expanded="false"] ~ #graphite-simple-mode { display: none !important; }
-  #graphite-simple-mode { grid-column: 1 / -1; margin-top: 6px; }
+  .graphite-nav-ready #topmenu.nav { flex: 1 1 auto; max-height: none; }
+  .graphite-nav-ready #graphite-simple-mode {
+    margin-top: 4px;
+    padding-inline: 14px !important;
+    border: 0 !important;
+    border-top: 1px solid var(--line) !important;
+    border-radius: 0 0 10px 10px !important;
+    background: transparent !important;
+    color: var(--ink) !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #graphite-simple-mode:focus-visible { outline-offset: -2px; }
   #topmenu.nav > li { flex: none; }
   #topmenu.nav > li > a { min-height: 44px; padding: 8px 10px !important; box-shadow: none !important; }
   #topmenu.nav > li:has(> .dropdown-menu) > a { grid-template-columns: 20px minmax(0, 1fr) 8px !important; }
@@ -1751,6 +1796,8 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
     display: none !important;
     position: static !important;
     min-width: 0;
+    width: calc(100% - 20px);
+    box-sizing: border-box;
     margin: 0 0 4px 20px !important;
     padding: 2px 0 2px 8px !important;
     border: 0 !important;
@@ -1770,8 +1817,16 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
   #topmenu.nav .dropdown-menu > li > a {
     min-height: 44px;
     box-sizing: border-box;
+    width: 100%;
     white-space: normal;
     overflow-wrap: anywhere;
+  }
+  .graphite-simple #topmenu.nav > li:has(> .dropdown-menu) > a { display: none !important; }
+  .graphite-simple #topmenu.nav > li.graphite-expanded > .dropdown-menu {
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
   }
   #topmenu.nav .dropdown-menu > li > a[aria-current="page"] {
     color: var(--accent) !important;
@@ -1788,7 +1843,7 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
     background: var(--canvas);
     box-shadow: none;
   }
-  #maincontent h2 { max-width: none; font-size: 30px; margin: 0 0 6px !important; }
+  #maincontent h2 { max-width: none; font-size: 28px; margin: 0 !important; }
   #maincontent h3, .cbi-section > legend { font-size: 21px; }
   .cbi-title > h3, .cbi-section > h3 { font-size: 18px !important; }
   #maincontent .cbi-map > .cbi-section,
@@ -1813,11 +1868,13 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
 
   /* dashboard grid collapses to one column */
   body[data-page="admin-status-overview"] #view { grid-template-columns: minmax(0, 1fr) !important; gap: 12px; }
+  body[data-page="admin-status-overview"] #view > .cbi-section > .cbi-title { margin-bottom: 8px; }
   #maincontent .cbi-section, #view > * { min-width: 0; max-width: 100%; box-sizing: border-box; }
 
   /* Keep short status values beside their labels and let long values wrap. */
   body[data-page="admin-status-overview"] #view .cbi-section > div > table.table:not(:has(.th, .cbi-progressbar, [data-title])) {
     display: block;
+    margin: 0;
     border: 0 !important;
   }
   body[data-page="admin-status-overview"] #view .cbi-section > div > table.table:not(:has(.th, .cbi-progressbar, [data-title])) > tbody {
@@ -1852,7 +1909,12 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
   body[data-page="admin-status-overview"] #view .cbi-progressbar > div::before { --sweep: calc(var(--n) * 360deg / 76); background: conic-gradient(var(--accent) var(--sweep), var(--canvas) 0); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px)); mask: radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 7px)); }
   body[data-page="admin-status-overview"] #view .cbi-progressbar > div::after { counter-reset: pct round(calc(tan(atan2(100cqw, 1px)) * 100 / 76)); font-size: 18px; }
   body[data-page="admin-status-overview"] #view .cbi-progressbar::before { width: 100%; overflow-wrap: anywhere; font-size: 11px !important; }
-  body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) .td { overflow-wrap: normal; hyphens: auto; }
+  body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) .td {
+    padding-inline: 0 !important;
+    font-size: 12px;
+    overflow-wrap: normal;
+    hyphens: auto;
+  }
 
   /* form rows stack */
   .cbi-value { display: block; padding: 12px 0 !important; }
