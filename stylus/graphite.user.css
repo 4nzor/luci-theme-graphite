@@ -657,8 +657,8 @@ footer a { color: var(--ink-3) !important; }
 }
 .table .tr { background: transparent !important; }
 .table .th {
-  padding: 10px 14px !important;
-  font-size: 14.5px;
+  padding: 8px 12px !important;
+  font-size: 15px;
   font-weight: 500;
   color: var(--ink-3) !important;
   text-transform: none;
@@ -668,8 +668,8 @@ footer a { color: var(--ink-3) !important; }
   white-space: nowrap;
 }
 .table .td {
-  padding: 15px 14px !important;
-  font-size: 15.5px;
+  padding: 11px 12px !important;
+  font-size: 16px;
   border: 0 !important;
   border-bottom: 1px solid var(--line) !important;
   background: transparent !important;
@@ -1125,7 +1125,7 @@ body[data-page="admin-network-wireless"] .cbi-tblsection > .cbi-section-table .c
   border: 0 !important;
   border-top: 1px solid var(--line) !important;
   border-bottom: 1px solid var(--line) !important;
-  padding: 16px 18px !important;
+  padding: 12px 14px !important;
 }
 body[data-page="admin-network-network"] #cbi-network-interface .cbi-section-table-row > .td:first-child,
 body[data-page="admin-network-wireless"] .cbi-tblsection > .cbi-section-table .cbi-section-table-row > .td:first-child {
@@ -1151,13 +1151,13 @@ body[data-page="admin-network-network"] #cbi-network-interface .ifacebox { backg
   overflow: hidden;
   margin-bottom: 16px;
 }
-#view > table.table .th:first-child, #view > table.table .td:first-child { padding-left: 22px !important; }
-#view > table.table .th:last-child, #view > table.table .td:last-child { padding-right: 22px !important; }
-#view > table.table .th { padding-top: 16px !important; }
+#view > table.table .th:first-child, #view > table.table .td:first-child { padding-left: 16px !important; }
+#view > table.table .th:last-child, #view > table.table .td:last-child { padding-right: 16px !important; }
+#view > table.table .th { padding-top: 12px !important; }
 
 /* dense tables (7+ columns, e.g. static leases, firewall rules) get tighter cells so actions stay inside the card */
 #maincontent .table:has(.th:nth-child(7)) .th,
-#maincontent .table:has(.th:nth-child(7)) .td { padding: 10px 9px !important; font-size: 14px; }
+#maincontent .table:has(.th:nth-child(7)) .td { padding: 8px 8px !important; font-size: 14.5px; }
 #maincontent .table:has(.th:nth-child(7)) .td.cbi-section-actions > div { display: flex; gap: 6px; flex-wrap: nowrap; }
 #maincontent .td.cbi-section-actions .cbi-button { padding: 7px 10px !important; min-height: 34px; }
 /* in dense tables row actions collapse to icon buttons (the title attribute keeps the tooltip) */
@@ -1840,9 +1840,9 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
     gap: 10px;
     padding: 5px 0 !important;
   }
-  .table .tr { margin: 0 !important; padding: 10px 0 !important; border-top: 1px solid var(--line) !important; }
+  .table .tr { margin: 0 !important; padding: 8px 0 !important; border-top: 1px solid var(--line) !important; }
   .table .tr:first-child { border-top: 0 !important; }
-  .table .td { padding: 2px 4px !important; font-size: 14.5px; border: 0 !important; }
+  .table .td { padding: 2px 4px !important; font-size: 15px; border: 0 !important; }
   body[data-page="admin-status-overview"] #view > .cbi-section .table .td:first-child { width: auto !important; font-size: 13px; }
   #maincontent .table .td { min-width: 0; overflow-wrap: anywhere; }
   .td[data-title]::before { font-weight: 500 !important; color: var(--ink-3); font-size: 12.5px; margin-bottom: 2px; }
