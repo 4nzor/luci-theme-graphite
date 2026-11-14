@@ -54,6 +54,26 @@
     </div>
   </div>
   <footer>OpenWrt 25.12.5</footer>
+  <template id="fixture-interfaces">
+    <h2>Интерфейсы</h2>
+    <div class="cbi-map-tabbed">
+      <section class="cbi-section" id="cbi-network-interface">
+        <div class="table cbi-section-table">
+          <div class="tr cbi-section-table-row">
+            <div class="td" data-name="_ifacebox"><strong>LAN</strong></div>
+            <div class="td" data-name="_ifacestat">192.168.1.1/24</div>
+            <div class="td cbi-section-actions">
+              <div>
+                <button class="cbi-button">Перезапустить</button>
+                <button class="cbi-button">Остановить</button>
+                <button class="cbi-button cbi-button-edit">Изменить</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </template>
   <template id="fixture-settings">
     <h2>Настройки сети</h2>
     <div class="cbi-map">
@@ -99,7 +119,12 @@
     <li><a href="/cgi-bin/luci/admin/logout">Выйти</a></li>
   </template>
   <script>
-    if (new URLSearchParams(location.search).has('settings')) {
+    const params = new URLSearchParams(location.search);
+    if (params.has('interfaces')) {
+      document.body.dataset.page = 'admin-network-network';
+      document.getElementById('view').replaceChildren(document.getElementById('fixture-interfaces').content.cloneNode(true));
+    }
+    if (params.has('settings')) {
       document.body.dataset.page = 'admin-network-firewall';
       document.getElementById('view').replaceChildren(document.getElementById('fixture-settings').content.cloneNode(true));
     }

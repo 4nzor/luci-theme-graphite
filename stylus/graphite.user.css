@@ -1800,7 +1800,7 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
     background: var(--canvas);
     box-shadow: none;
   }
-  #maincontent h2 { max-width: none; font-size: 28px; margin: 0 !important; }
+  #maincontent h2 { max-width: none; font-size: 28px; margin: 0 0 4px !important; }
   #maincontent h3, .cbi-section > legend { font-size: 21px; }
   .cbi-title > h3, .cbi-section > h3 { font-size: 18px !important; }
   #maincontent .cbi-map > .cbi-section,
@@ -1808,13 +1808,10 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
   #view > .cbi-section,
   #maincontent .cbi-map-tabbed > .cbi-section,
   #view > div > .cbi-section:not(.cbi-section .cbi-section) {
-    padding: 10px 0 !important;
-    border: 0 !important;
-    border-top: 1px solid var(--line) !important;
-    border-radius: 0 !important;
-    background: transparent !important;
+    padding: 11px 12px !important;
+    border-radius: 14px !important;
     box-shadow: none !important;
-    margin-bottom: 6px !important;
+    margin-bottom: 8px !important;
   }
   #tabmenu .tabs, .cbi-tabmenu {
     display: flex !important;
@@ -1828,9 +1825,15 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
   #tabmenu .tabs > li > a, .cbi-tabmenu > li > a { min-height: 44px; }
 
   /* dashboard grid collapses to one column */
-  body[data-page="admin-status-overview"] #view { grid-template-columns: minmax(0, 1fr) !important; gap: 6px; }
+  body[data-page="admin-status-overview"] #view { grid-template-columns: minmax(0, 1fr) !important; gap: 8px; }
   body[data-page="admin-status-overview"] #view > .cbi-section { height: auto; }
-  body[data-page="admin-status-overview"] #view > .cbi-section > .cbi-title { margin-bottom: 6px; }
+  body[data-page="admin-status-overview"] #view > .cbi-section > .cbi-title { margin-bottom: 7px; }
+  #maincontent #view .cbi-title :is(button, .btn) {
+    min-height: 36px;
+    padding: 4px 9px !important;
+    border-radius: 8px !important;
+  }
+  body[data-page="admin-status-overview"] #view > .cbi-section .table .td { padding-inline: 0 !important; }
   #maincontent #view .cbi-title > h3 { margin: 0 !important; }
   #maincontent .cbi-section, #view > * { min-width: 0; max-width: 100%; box-sizing: border-box; }
 
@@ -1857,62 +1860,72 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
   #maincontent .table .td { min-width: 0; overflow-wrap: anywhere; }
   .td[data-title]::before { font-weight: 500 !important; color: var(--ink-3); font-size: 12.5px; margin-bottom: 2px; }
 
-  /* Status meters share the same label/value layout as the other rows. */
+  /* Keep the gauges on one shared surface with captions in normal flow. */
   body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
+    grid-template-columns: repeat(auto-fit, minmax(min(78px, 100%), 1fr));
+    gap: 8px;
     margin: 0;
   }
   body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) .tr {
     display: grid !important;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-    align-items: center;
-    gap: 10px;
-    padding: 6px 0 !important;
-    border-radius: 0;
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    gap: 6px;
+    padding: 4px 0 1px !important;
+    border: 0 !important;
     background: transparent !important;
   }
-  body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) .td {
-    padding: 0 4px !important;
-    text-align: left !important;
-    font-weight: 400;
-    white-space: normal;
+  @supports (grid-template-rows: subgrid) {
+    body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) .tr {
+      grid-template-rows: subgrid;
+      grid-row: span 2;
+    }
   }
-  body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) .td:has(.cbi-progressbar) {
-    order: 0;
+  body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) .td:has(.cbi-progressbar) { order: 0; }
+  body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) .td {
+    flex: none !important;
+    align-self: stretch;
     overflow: visible;
+    font-size: 12px;
+    line-height: 1.25;
+    white-space: normal;
+    overflow-wrap: normal;
+    hyphens: auto;
   }
   body[data-page="admin-status-overview"] #view .cbi-progressbar {
-    width: 100% !important;
+    --d: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: var(--d) !important;
     height: auto !important;
-    margin: 0 !important;
-    isolation: isolate;
+    margin: 0 auto !important;
+  }
+  body[data-page="admin-status-overview"] #view .cbi-progressbar > div {
+    height: var(--d) !important;
+    align-self: flex-start;
+  }
+  body[data-page="admin-status-overview"] #view .cbi-progressbar > div::before {
+    --sweep: calc(var(--n) * 6deg);
+    left: 0;
+    background: conic-gradient(var(--accent) var(--sweep), var(--line-strong) 0);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
+  }
+  body[data-page="admin-status-overview"] #view .cbi-progressbar > div::after {
+    counter-reset: pct round(calc(tan(atan2(100cqw, 1px)) * 100 / 60));
+    font-size: 16px;
   }
   body[data-page="admin-status-overview"] #view .cbi-progressbar::before {
     position: static;
-    display: block;
-    width: auto;
+    order: 1;
+    width: min(110px, calc((100vw - 68px) / 3));
     transform: none;
-    margin-bottom: 4px;
+    margin-top: 5px;
     overflow-wrap: anywhere;
-    text-align: left;
+    font-size: 11px !important;
+    font-variant-numeric: tabular-nums;
   }
-  body[data-page="admin-status-overview"] #view .cbi-progressbar::after {
-    content: "";
-    position: absolute;
-    inset: auto 0 0;
-    z-index: -1;
-    height: 4px;
-    border-radius: 999px;
-    background: var(--card-hover);
-  }
-  body[data-page="admin-status-overview"] #view .cbi-progressbar > div {
-    height: 4px !important;
-    border-radius: 999px !important;
-    background: var(--accent) !important;
-  }
-  body[data-page="admin-status-overview"] #view .cbi-progressbar > div::before,
-  body[data-page="admin-status-overview"] #view .cbi-progressbar > div::after { content: none; }
 
   /* form rows stack */
   .cbi-value { display: block; padding: 8px 0 !important; }
@@ -1941,6 +1954,8 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
     overflow: auto;
   }
   #modal_overlay > .modal.login { width: min(400px, calc(100% - 24px)); }
+  #modal_overlay .modal > .button-row { flex-wrap: wrap; }
+  #modal_overlay .modal > .button-row > button { min-height: 44px; margin: 0; }
 
   /* list pages: the whole row is the card, not each cell */
   body[data-page="admin-network-network"] #cbi-network-interface .cbi-section-table,
@@ -1963,8 +1978,9 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
     border-radius: 0 !important;
     padding: 0 6px !important;
   }
-  .td.cbi-section-actions > div { display: flex; flex-wrap: wrap; gap: 6px; }
-  .td.cbi-section-actions .cbi-button { flex: 1 1 auto; width: auto !important; }
+  .td.cbi-section-actions { flex-basis: 100%; }
+  #maincontent .table .td.cbi-section-actions > div { display: flex; flex-wrap: wrap; gap: 6px; }
+  #maincontent .td.cbi-section-actions .cbi-button { flex: 1 1 auto; width: auto !important; min-height: 44px; }
 
   /* bare tables (associated stations) */
   #view > table.table {
@@ -1979,7 +1995,7 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
   /* actions bar spans the width, buttons share it */
   .cbi-page-actions {
     display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
     bottom: max(8px, env(safe-area-inset-bottom));
     margin: 16px 0 0 !important;
     padding: 8px !important;
@@ -1988,7 +2004,14 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
   }
   .cbi-page-actions::after { content: none; }
   .cbi-page-actions > * { width: 100% !important; min-width: 0; margin: 0 !important; }
-  .cbi-page-actions :is(.cbi-button, button) { min-height: 44px; white-space: normal; }
+  #maincontent .cbi-page-actions :is(.cbi-button, button) {
+    min-height: 44px;
+    padding: 6px 8px !important;
+    line-height: 1.2;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
   .cbi-page-actions > .cbi-button-apply, .cbi-page-actions > .cbi-dropdown { grid-column: 1 / -1; }
   .cbi-page-actions > .cbi-dropdown > ul > li { justify-content: center; }
 
