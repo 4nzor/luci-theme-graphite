@@ -517,6 +517,8 @@ body[data-page^="admin-network-firewall"] #topmenu .dropdown-menu a[href$="/admi
     border-radius: 0 !important;
     font-size: 14px;
     line-height: 1.3;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
   body[data-page^="admin-status"]     #topmenu > li:has(a[href*="/admin/status/"]) > .dropdown-menu > li > a:hover,
   body[data-page^="admin-system"]     #topmenu > li:has(a[href*="/admin/system/"]) > .dropdown-menu > li > a:hover,
@@ -587,27 +589,23 @@ header [data-indicator="poll-status"]:hover { color: var(--ink) !important; bord
 }
 @media (prefers-reduced-motion: reduce) { header [data-indicator="poll-status"]::before { animation: none !important; } }
 
-/* ============ Content panel ============ */
+/* ============ Page layout ============ */
 #maincontent.container {
   position: relative;
   z-index: 1;
   max-width: none !important;
   width: auto !important;
-  margin: 12px 12px 12px calc(var(--sidebar) + 12px) !important;
-  padding: clamp(22px, 2.6vw, 36px) clamp(20px, 3vw, 44px) 48px !important;
-  min-height: calc(100vh - 24px);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, .035), transparent 96px),
-    var(--panel);
-  border: 1px solid rgba(255, 255, 255, .06);
-  border-radius: var(--r-xl);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05);
+  margin: 0 0 0 var(--sidebar) !important;
+  padding: clamp(20px, 2.1vw, 32px) clamp(20px, 2.4vw, 36px) 32px !important;
+  min-height: 100vh;
+  background: transparent !important;
+  border: 0;
   box-sizing: border-box;
   animation: graphite-fade .22s ease both;
 }
 footer {
-  margin-left: calc(var(--sidebar) + 12px) !important;
-  padding: 16px 24px !important;
+  margin-left: var(--sidebar) !important;
+  padding: 12px clamp(20px, 2.4vw, 36px) !important;
   border: 0 !important;
   color: var(--ink-ghost) !important;
   font-size: 12px;
@@ -649,7 +647,7 @@ footer a { color: var(--ink-3) !important; }
 #maincontent h4 { font-weight: 700; color: var(--ink); }
 .cbi-section-descr { color: var(--ink-3); max-width: 72ch; }
 
-/* sections flow on the panel; nested ones become cards */
+/* Individual sections provide the surface for their content. */
 .cbi-section, .cbi-map > fieldset.cbi-section {
   background: transparent !important;
   border: 0 !important;
@@ -657,16 +655,6 @@ footer a { color: var(--ink-3) !important; }
   padding: 0 !important;
   margin: 0 0 44px !important;
 }
-.cbi-section .cbi-section,
-.cbi-section-node,
-.cbi-section > .cbi-section-node {
-  background: var(--card) !important;
-  border: 0 !important;
-  border-radius: var(--r-l) !important;
-  padding: 18px 22px !important;
-}
-.cbi-section-node .cbi-section-node { background: transparent !important; padding: 0 !important; }
-
 /* ============ Tabs (page tabs #tabmenu and in-section .cbi-tabmenu) ============ */
 #tabmenu .tabs, .cbi-tabmenu {
   display: inline-flex !important;
@@ -1080,10 +1068,10 @@ img[src*="/icons/"]:not([src*="loading"]) { width: 22px !important; height: 22px
 #view > div > .cbi-section:not(.cbi-section .cbi-section) {
   background: var(--card) !important;
   border: 1px solid var(--line) !important;
-  border-radius: 22px !important;
-  padding: 22px 24px 18px !important;
-  margin: 0 0 16px !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .045) !important;
+  border-radius: var(--r-l) !important;
+  padding: 16px 18px !important;
+  margin: 0 0 14px !important;
+  box-shadow: none !important;
 }
 #maincontent .cbi-section .cbi-section,
 #maincontent .cbi-section .cbi-section-node,
@@ -1110,10 +1098,11 @@ img[src*="/icons/"]:not([src*="loading"]) { width: 22px !important; height: 22px
 /* Status → Overview: dashboard grid */
 body[data-page="admin-status-overview"] #view {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
   gap: 16px;
   align-items: start;
 }
+body[data-page="admin-status-overview"] #view > h2 { grid-column: 1 / -1; margin-bottom: 0 !important; }
 body[data-page="admin-status-overview"] #view > .cbi-section { margin: 0 !important; height: 100%; box-sizing: border-box; }
 body[data-page="admin-status-overview"] #view > .cbi-section:has(table.leases, table.assoclist, .network-status-table .ifacebox + .ifacebox) { grid-column: 1 / -1; }
 body[data-page="admin-status-overview"] #view > .cbi-section:not(:has(table, .ifacebox)) { display: none !important; }
@@ -1121,8 +1110,11 @@ body[data-page="admin-status-overview"] #view > .cbi-section .table .td:first-ch
 
 /* wide tables scroll inside their card instead of spilling out */
 /* (only wrappers that hold a table scroll; overflow-x on form sections would clip open dropdown lists) */
-#maincontent .cbi-section > div:not(.cbi-title):has(> table.table:not(:has(.cbi-progressbar))),
-#maincontent .cbi-section-node:has(> table.table) { overflow-x: auto; }
+#maincontent .cbi-section > div:not(.cbi-title):has(> .table):not(:has(> .table .cbi-progressbar)),
+#maincontent .cbi-section-node:has(> .table):not(:has(> .table .cbi-progressbar)) {
+  position: relative;
+  overflow-x: auto;
+}
 #maincontent .table select:not([multiple]), #maincontent .table .cbi-dropdown:not(.btn):not(.cbi-button) { min-width: 112px !important; }
 
 /* port status: small centred tiles; network / wireless status: wider, left-aligned tiles */
@@ -1143,9 +1135,9 @@ body[data-page="admin-status-overview"] #view > .cbi-section .table .td:first-ch
 .network-status-table .ifacebox, #view .cbi-section > div > div > .ifacebox {
   margin: 0 !important;
   width: auto !important;
-  background: var(--card-hover) !important;
+  background: transparent !important;
   border: 0 !important;
-  border-radius: 16px !important;
+  border-radius: var(--r-s) !important;
 }
 .ifacebox .ifacebox-body { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; overflow-wrap: anywhere; }
 /* port tiles: translated captions ("нет соединения") are longer than "no link" — let them wrap */
@@ -1192,7 +1184,7 @@ body[data-page="admin-network-network"] #cbi-network-interface .cbi-section-tabl
 body[data-page="admin-network-wireless"] .cbi-tblsection > .cbi-section-table .cbi-section-table-row:hover > .td {
   background: var(--card-hover) !important;
 }
-body[data-page="admin-network-network"] #cbi-network-interface .ifacebox { background: var(--card-hover) !important; }
+body[data-page="admin-network-network"] #cbi-network-interface .ifacebox { background: transparent !important; }
 
 /* bare tables placed straight into the view (e.g. associated stations) get the card treatment too */
 #view > table.table {
@@ -1338,9 +1330,8 @@ body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) .tr {
   flex-wrap: nowrap !important;
   align-items: center;
   gap: 10px;
-  padding: 18px 12px 14px;
-  border-radius: 18px;
-  background: var(--card-hover) !important;
+  padding: 8px 4px 4px;
+  background: transparent !important;
 }
 body[data-page="admin-status-overview"] #view .table:has(.cbi-progressbar) .td {
   display: block !important;
@@ -1833,15 +1824,11 @@ body.graphite-simple:not([data-page^="admin-status-realtime"]) #tabmenu,
     background: color-mix(in srgb, var(--accent) 14%, var(--card)) !important;
   }
 
-  /* content panel */
+  /* page layout */
   #maincontent.container, footer { margin: 0 8px 8px !important; }
   #maincontent.container {
     min-height: 0;
     padding: 12px 4px 16px !important;
-    border: 0;
-    border-radius: 0;
-    background: var(--canvas);
-    box-shadow: none;
   }
   #maincontent h2 { max-width: none; font-size: 28px; margin: 0 0 4px !important; }
   #maincontent h3, .cbi-section > legend { font-size: 21px; }

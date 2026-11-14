@@ -54,6 +54,51 @@
     </div>
   </div>
   <footer>OpenWrt 25.12.5</footer>
+  <template id="fixture-dhcp">
+    <h2>DHCP</h2>
+    <div class="cbi-map">
+      <ul class="cbi-tabmenu">
+        <li class="cbi-tab"><a href="#leases">Leases</a></li>
+        <li class="cbi-tab-disabled"><a href="#dnsmasq">dnsmasq</a></li>
+        <li class="cbi-tab-disabled"><a href="#odhcpd">odhcpd</a></li>
+      </ul>
+      <section class="cbi-section">
+        <h3>Static leases</h3>
+        <p class="cbi-section-descr">Reserve IP addresses and hostnames for DHCP clients.</p>
+        <div class="cbi-section-node">
+          <div class="table cbi-section-table">
+            <div class="tr table-titles">
+              <div class="th">Hostname</div>
+              <div class="th">MAC Addresses</div>
+              <div class="th">IPv4 address</div>
+              <div class="th">Lease time</div>
+              <div class="th">DUID/IAIDs</div>
+              <div class="th">IPv6 Token</div>
+              <div class="th">Set Tag</div>
+              <div class="th">Match Tag</div>
+              <div class="th"></div>
+            </div>
+            <div class="tr cbi-section-table-row">
+              <div class="td" data-title="Hostname">test-router</div>
+              <div class="td" data-title="MAC Addresses">02:00:00:00:00:01</div>
+              <div class="td" data-title="IPv4 address">192.0.2.10</div>
+              <div class="td" data-title="Lease time">12h</div>
+              <div class="td" data-title="DUID/IAIDs">—</div>
+              <div class="td" data-title="IPv6 Token">—</div>
+              <div class="td" data-title="Set Tag">—</div>
+              <div class="td" data-title="Match Tag">—</div>
+              <div class="td cbi-section-actions">
+                <div>
+                  <button class="cbi-button cbi-button-edit" title="Edit">Edit</button>
+                  <button class="cbi-button cbi-button-remove" title="Delete">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </template>
   <template id="fixture-interfaces">
     <h2>Интерфейсы</h2>
     <div class="cbi-map-tabbed">
@@ -120,6 +165,10 @@
   </template>
   <script>
     const params = new URLSearchParams(location.search);
+    if (params.has('dhcp')) {
+      document.body.dataset.page = 'admin-network-dhcp';
+      document.getElementById('view').replaceChildren(document.getElementById('fixture-dhcp').content.cloneNode(true));
+    }
     if (params.has('interfaces')) {
       document.body.dataset.page = 'admin-network-network';
       document.getElementById('view').replaceChildren(document.getElementById('fixture-interfaces').content.cloneNode(true));
