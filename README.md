@@ -21,7 +21,8 @@ ring gauges on the status page and iOS-style switches.
 
 ## Features
 
-- **Sidebar navigation** with line icons on sections and submenu items; the current section stays expanded, the others open as flyouts. On phones it collapses into a top bar with a scrollable row of chips.
+- **Sidebar navigation** with line icons on sections and submenu items; the current section stays expanded, the others open as flyouts. On phones it folds into a compact top bar with a tap-to-expand menu.
+- **Simple Mode** keeps Overview, Realtime Graphs and Log out in the navigation. The preference is saved in this browser and does not change LuCI permissions.
 - **Card layout**: every section is a card; Status → Overview becomes a dashboard grid, interface and Wi-Fi lists render one card per row.
 - **Ring gauges** for memory, storage and connections instead of progress bars - pure CSS, no JavaScript.
 - **Line icons** for interface types, Wi-Fi signal and row actions (restart, stop, edit, delete, scan…), independent of the UI language.
@@ -46,6 +47,8 @@ package from the latest release, installs it and switches LuCI to Graphite. Relo
 afterwards (Ctrl+F5 / Cmd+Shift+R).
 
 You can switch themes any time in **System → System → Language and Style**.
+
+For automated or agent-assisted installs, use the [installation guide for AI agents](INSTALL_FOR_AGENTS.md).
 
 ## Remove
 
@@ -86,8 +89,8 @@ tools/deploy.sh
 ```
 
 The script rebuilds the CSS, runs a headless nav-layout check (icon+label packed left),
-uploads to `/www/luci-static/graphite/`, clears the LuCI cache, then repeats the check
-against the live host. `tools/check-nav.mjs` is also gated in GitHub Actions.
+uploads the CSS to `/www/luci-static/graphite/`, clears the LuCI cache, then repeats the check
+against the live host. To apply template or navigation-script changes, install a package built from those changes. `tools/check-nav.mjs` is also gated in GitHub Actions.
 
 ## Layout
 
