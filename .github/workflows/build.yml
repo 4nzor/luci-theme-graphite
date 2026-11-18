@@ -93,7 +93,12 @@ jobs:
           body: |
             ## Graphite ${{ github.ref_name }}
 
-            ### What's new in 1.1.4
+            ### What's new in 1.2.0
+            - Compact mobile header with tap-to-expand navigation and larger controls.
+            - Simple Mode keeps Overview, Realtime Graphs and Log out in the menu.
+            - [Installation guide for AI agents](https://github.com/4nzor/luci-theme-graphite/blob/${{ github.ref_name }}/INSTALL_FOR_AGENTS.md).
+
+            ### 1.1.4
             - Login card: stop form-row `flex-basis: 320px` from stretching fields; center modal
 
             ### 1.1.3

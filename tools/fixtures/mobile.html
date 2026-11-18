@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru" data-darkmode="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Graphite mobile layout fixture</title>
+  <link rel="stylesheet" href="/bootstrap/cascade.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 854px)" href="/bootstrap/mobile.css">
+  <link rel="stylesheet" href="../../htdocs/luci-static/graphite/graphite.css">
+  <script defer src="../../htdocs/luci-static/graphite/navigation.js"></script>
+</head>
+<body class="lang_ru" data-page="admin-status-overview">
+  <header>
+    <a class="brand" href="/"><span>openwrt</span></a>
+    <button type="button" id="graphite-menu" aria-expanded="false" aria-controls="graphite-navigation">Меню</button>
+    <div id="graphite-navigation">
+      <ul class="nav" id="topmenu" style="display:none"></ul>
+      <button type="button" id="graphite-simple-mode" aria-pressed="false">Простой режим</button>
+    </div>
+    <div id="indicators" class="pull-right">
+      <div data-indicator="poll-status">Обновляется</div>
+      <a href="#" data-indicator="uci-changes" data-style="active">Несохранённые изменения: 3</a>
+    </div>
+  </header>
+  <div class="container" id="maincontent">
+    <div id="tabmenu"></div>
+    <div id="view">
+      <h2>Статус</h2>
+      <section class="cbi-section">
+        <div class="cbi-title"><h3>Система</h3></div>
+        <div>
+          <table class="table">
+            <tbody>
+              <tr class="tr"><td class="td">Имя хоста</td><td class="td">OpenWrt</td></tr>
+              <tr class="tr"><td class="td">Модель</td><td class="td">Cudy WR3000 v1</td></tr>
+              <tr class="tr"><td class="td">Версия прошивки</td><td class="td">OpenWrt 25.12.5 / LuCI openwrt-25.12</td></tr>
+              <tr class="tr"><td class="td">Время работы</td><td class="td">2 дня, 7 часов</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="cbi-section">
+        <div class="cbi-title"><h3>Память</h3></div>
+        <div>
+          <table class="table">
+            <tbody>
+              <tr class="tr"><td class="td">Всего доступно</td><td class="td"><div class="cbi-progressbar" title="114 МиБ / 238 МиБ (48%)"><div style="width:48%"></div></div></td></tr>
+              <tr class="tr"><td class="td">Используется</td><td class="td"><div class="cbi-progressbar" title="124 МиБ / 238 МиБ (52%)"><div style="width:52%"></div></div></td></tr>
+              <tr class="tr"><td class="td">Буферизация</td><td class="td"><div class="cbi-progressbar" title="29 МиБ / 238 МиБ (12%)"><div style="width:12%"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+  <footer>OpenWrt 25.12.5</footer>
+  <template id="fixture-dhcp">
+    <h2>DHCP</h2>
+    <div class="cbi-map">
+      <ul class="cbi-tabmenu">
+        <li class="cbi-tab"><a href="#leases">Leases</a></li>
+        <li class="cbi-tab-disabled"><a href="#dnsmasq">dnsmasq</a></li>
+        <li class="cbi-tab-disabled"><a href="#odhcpd">odhcpd</a></li>
+      </ul>
+      <section class="cbi-section">
+        <h3>Static leases</h3>
+        <p class="cbi-section-descr">Reserve IP addresses and hostnames for DHCP clients.</p>
+        <div class="cbi-section-node">
+          <div class="table cbi-section-table">
+            <div class="tr table-titles">
+              <div class="th">Hostname</div>
+              <div class="th">MAC Addresses</div>
+              <div class="th">IPv4 address</div>
+              <div class="th">Lease time</div>
+              <div class="th">DUID/IAIDs</div>
+              <div class="th">IPv6 Token</div>
+              <div class="th">Set Tag</div>
+              <div class="th">Match Tag</div>
+              <div class="th"></div>
+            </div>
+            <div class="tr cbi-section-table-row">
+              <div class="td" data-title="Hostname">test-router</div>
+              <div class="td" data-title="MAC Addresses">02:00:00:00:00:01</div>
+              <div class="td" data-title="IPv4 address">192.0.2.10</div>
+              <div class="td" data-title="Lease time">12h</div>
+              <div class="td" data-title="DUID/IAIDs">—</div>
+              <div class="td" data-title="IPv6 Token">—</div>
+              <div class="td" data-title="Set Tag">—</div>
+              <div class="td" data-title="Match Tag">—</div>
+              <div class="td cbi-section-actions">
+                <div>
+                  <button class="cbi-button cbi-button-edit" title="Edit">Edit</button>
+                  <button class="cbi-button cbi-button-remove" title="Delete">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </template>
+  <template id="fixture-interfaces">
+    <h2>Интерфейсы</h2>
+    <div class="cbi-map-tabbed">
+      <section class="cbi-section" id="cbi-network-interface">
+        <div class="table cbi-section-table">
+          <div class="tr cbi-section-table-row">
+            <div class="td" data-name="_ifacebox"><strong>LAN</strong></div>
+            <div class="td" data-name="_ifacestat">192.168.1.1/24</div>
+            <div class="td cbi-section-actions">
+              <div>
+                <button class="cbi-button">Перезапустить</button>
+                <button class="cbi-button">Остановить</button>
+                <button class="cbi-button cbi-button-edit">Изменить</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </template>
+  <template id="fixture-settings">
+    <h2>Настройки сети</h2>
+    <div class="cbi-map">
+      <section class="cbi-section">
+        <h3>Настройки интерфейса</h3>
+        <div class="cbi-value">
+          <label class="cbi-value-title" for="ipaddr">IP-адрес</label>
+          <div class="cbi-value-field"><input type="text" id="ipaddr" value="192.168.1.1"></div>
+        </div>
+        <div class="cbi-value">
+          <label class="cbi-value-title" for="metric">Метрика</label>
+          <div class="cbi-value-field"><input type="number" id="metric" value="10"></div>
+        </div>
+        <div class="cbi-value">
+          <label class="cbi-value-title" for="notes">Примечание</label>
+          <div class="cbi-value-field"><textarea id="notes"></textarea></div>
+        </div>
+      </section>
+      <div class="cbi-page-actions">
+        <button class="cbi-button cbi-button-apply important">Сохранить и применить</button>
+        <button class="cbi-button cbi-button-save">Сохранить</button>
+        <button class="cbi-button cbi-button-reset">Сбросить изменения</button>
+      </div>
+    </div>
+  </template>
+  <template id="fixture-menu">
+    <li class="dropdown"><a class="menu" href="#">Статус</a>
+      <ul class="dropdown-menu">
+        <li><a href="/cgi-bin/luci/admin/status/overview">Обзор</a></li>
+        <li><a href="/cgi-bin/luci/admin/status/realtime">Графики в реальном времени</a></li>
+        <li><a href="/cgi-bin/luci/admin/status/processes">Процессы</a></li>
+      </ul>
+    </li>
+    <li class="dropdown"><a class="menu" href="#">Система</a>
+      <ul class="dropdown-menu"><li><a href="/cgi-bin/luci/admin/system/flash">Обновление прошивки</a></li></ul>
+    </li>
+    <li class="dropdown"><a class="menu" href="#">Службы</a>
+      <ul class="dropdown-menu"><li><a href="/cgi-bin/luci/admin/services/example">Установленная служба</a></li></ul>
+    </li>
+    <li class="dropdown"><a class="menu" href="#">Сеть</a>
+      <ul class="dropdown-menu"><li><a href="/cgi-bin/luci/admin/network/firewall">Межсетевой экран</a></li></ul>
+    </li>
+    <li><a href="/cgi-bin/luci/admin/logout">Выйти</a></li>
+  </template>
+  <script>
+    const params = new URLSearchParams(location.search);
+    if (params.has('dhcp')) {
+      document.body.dataset.page = 'admin-network-dhcp';
+      document.getElementById('view').replaceChildren(document.getElementById('fixture-dhcp').content.cloneNode(true));
+    }
+    if (params.has('interfaces')) {
+      document.body.dataset.page = 'admin-network-network';
+      document.getElementById('view').replaceChildren(document.getElementById('fixture-interfaces').content.cloneNode(true));
+    }
+    if (params.has('settings')) {
+      document.body.dataset.page = 'admin-network-firewall';
+      document.getElementById('view').replaceChildren(document.getElementById('fixture-settings').content.cloneNode(true));
+    }
+    setTimeout(() => {
+      const menu = document.getElementById('topmenu');
+      menu.append(document.getElementById('fixture-menu').content.cloneNode(true));
+      menu.style.display = '';
+    }, 50);
+  </script>
+</body>
+</html>
